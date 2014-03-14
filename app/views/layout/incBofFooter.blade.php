@@ -1,0 +1,1 @@
+<div class="footer-copyright  txtBlack11"></div>
