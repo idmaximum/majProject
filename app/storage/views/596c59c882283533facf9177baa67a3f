@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta name="description" content="Embassy Diploment Screens" />
+<meta name="keywords" content="embassy, diplomat, ais, central, ดูหนัง, หนังใหม่, โรงหนัง, โรงภาพยนตร์"/>
+<meta property="og:image" content="http://www.embassycineplex.com/images/share.jpg" />
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?> 
+<?php echo HTML::style('css/screenInside.css'); ?>
+<?php echo HTML::style('css/infomation.css'); ?>
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo $__env->make('frontendTH.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<style type="text/css">
+#divLandingPage {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 9999999;
+	left: 0;
+	top: 0;
+	background-color: #000;
+}
+</style>
+</head>
+<body>
+<?php 
+	$dateNow = date('Y-m-d 06:00'); 
+	$dateHrNow = date('Y-m-d H:i');   
+?>
+<?php  if (Session::get('landingPage') == ''){  ?>
+ 
+<?php 
+	$sessionDate = md5($dateNow);
+	Session::put('landingPage', $sessionDate);
+ }
+?> 
+<div id="main">
+  <?php echo $__env->make('frontendTH.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+    <?php foreach($rowData as $rowDetail): ?>
+   	 <div id="content" class="content-main">
+   <?php   /*<div class="page-information">
+        <h1 class="showToday">Information</h1> 
+         <div id="head-information"> 
+           <p class="txtGold30">&nbsp;</p>
+           <div class="txtBrown14_2"><?php echo nl2br($rowDetail->pages_infomation); ?></div>
+           <p class="txtWhite18">&nbsp;</p>
+         </div> 
+      </div>*/ ?>
+      <div class="page-information ">
+    	<div class=" content-relative fontTH "  >
+         <div id="apDivtitleInformation">Information</div>
+          <div style="text-align:center">
+            <h1 class="txtGold30" > เอ็มบาสซี่ ดิโพลแมทสกรีน     </h1>
+            <p class="txtWhite22">   สุดยอดโรงภาพยนตร์ที่ผสมความเป็นคลับเอ็กซ์คลูซีฟ   และโรงภาพยนตร์ส่วนตัวที่มีบริการระดับโรงแรม 6 ดาวได้อย่างลงตัว </p>
+            <p class="txtWhite22">จากประสบการณ์ของผู้บริหารที่คร่ำวอดในอุตสาหหรรมภาพยนตร์จากแคนาดามาเป็นเวลานาน </p>
+          </div>
+          <div id="head-information" style="padding-right:80px">  
+            <p class="ic-bullet">ดีไซน์ที่เป็นเลิศ</p>
+            <p > &nbsp; &nbsp; &nbsp; การออกแบบของโรงภาพยนตร์โดย &nbsp; สถาปนิกที่มีชื่อเสียงที่ได้รับรางวัลมากที่สุด <br>
+              โดยกลุ่มร๊อกเวลล์กรุ๊ป ยุโรป โดยการออกแบบโรงภาพยนตร์ได้รับแรงบันดาลใจจากการ<br>
+            ขดตัวของขดฟิลม์ 35 มม. ซึ่งเป็นที่มาของโลกเซลลูลอยด์ที่ใช้ในการสร้างภาพยนตร์ </p>
+            <p >&nbsp; </p>
+            <p class="ic-bullet">บริการคืออันดับหนึ่งในใจเรา</p>
+            <p > &nbsp; &nbsp; &nbsp; ทางโรงภาพยนตร์จะมีเจ้าหน้าที่ มูฟวี่ คอนเซียส ที่จะให้บริการมาตรฐานเดียวกับโรงแรม 6 ดาว  เป็นที่ปรึกษาแนะนำภาพยนตร์และอำนวยความสะดวกดูแลบริการลูกค้าอย่างใกล้ชิด นอกจากนั้นคุณยังสามารถเข้าถึงความสะดวกสบายในการจองตั๋วภาพยนตร์ผ่านระบบออนไลน์ ไม่ว่าจะเป็นทางเว็บไซต์ หรือแอพพลิเคชั่น และยังง่ายยิ่งขึ้นไปอีกด้วยระบบ วีไอพี ฮอทไลน์ ซึ่งสามารถให้คุณจองตั๋วชมภาพยนตร์ได้โดยตรงผ่านมูฟวี่คอนเซียส ซึ่งเป็นบริการส่วนตัวของคุณเอง</p>
+          </div> 
+
+          <table width="85%" border="0" cellspacing="0" cellpadding="0" style="margin:auto;">
+              <tr>
+                <td width="55%">  <p class="ic-bullet"> ประสบการณ์ชมภาพยนตร์ที่เป็นคุณภาพระดับโลก</p>
+            <p > &nbsp; &nbsp; &nbsp;ยิ่งไปกว่านั้น เรายังมีระบบฉาย เรียล ดี เอ็กซ์แอล ระบบฉายใหม่ล่าสุด คม</p>
+            <p >ชัดสมจริงและสว่างเป็นสองเท่าของทุกระบบสามมิติ &nbsp; ระบบเสียงที่ล้ำสมัยที่สุด </p>
+            <p >และที่ขาดไม่ได้เลย ทางโรงภาพยนตร์เอ็มบาสซี่ ดิโพลแมทสกรีน ยังบริการผู้ชม</p>
+            <p >ภาพยนตร์ ด้วยเก้าอี้โซฟาขนาดใหญ่ที่สามารถเอนนอนเสมือนเก้าอี้ <br>
+              ที่ใช้ในชั้นเฟิร์สคลาสของสายการบินชั้นนำ และยังมีความพิเศษคือ </p></td>
+                <td width="45%">
+                <p>&nbsp;</p>
+                <p>&nbsp;</p> 
+                <p>เป็นเก้าอี้โซฟาขนาดใหญ่ มีสายยูเอสบีเพื่อชาร์จอุปกรณ์อิเล็คโทรนิคได้ มูฟวี่ คิวเรเตอร์  ของโรงภาพยนตร์ จะทำการคัดสรรภาพยนตร์ฟอร์มยักษ์ระดับฮอลลีวู้ด และภาพยนตร์ที่ได้รับรางวัลต่างๆ ทั้งรางวัลออสการ์  รางวัลคานส์ และจากกเทศกาลภาพยนตร์ทั่วโลก รวมถึงรางวัลลูกโลกทองคำ ที่คุณจะต้องไม่พลาด</p> <p>&nbsp;</p>
+              </td>
+              </tr>
+            </table> <p>&nbsp;</p> 
+                <p style="text-align:center">
+                <img src="images/16_information_2_10.jpg" width="237" height="159"> &nbsp; 
+                <img src="images/16_information_2_12.jpg" width="237" height="159"> &nbsp; 
+                <img src="images/16_information_2_14.jpg" width="238" height="159"> &nbsp; 
+                <img src="images/16_information_2_16.jpg" width="237" height="159"> </p> 
+          <div style="padding:60px">
+  <p class="ic-bullet">รุปแบบการบริการที่แตกต่างกับทุกโรงภาพยนตร์</p>
+                 <p > &nbsp; &nbsp; &nbsp; ตั้งแต่ก้าวแรกที่คุณเข้าสู่ โรงภาพยนตร์เอ็มบาสซี่ ดิโพลแมทสกรีน แห่งนี้  มีความพิเศษกว่าโรงภาพยนตร์อื่นๆ ด้วยการให้บริการแบบเอ็กซ์คลูซีฟ  มีพื้นที่เลานจ์ขนาดใหญ่ ที่ตกแต่งอย่างหรูหราในรูปแบบเรสซิเดนท์ส่วนตัวของซุปเปอร์สตาร์ฮอลลีวูด  และมีเลานจ์ซึ่งจะทำให้คุณได้รู้สึกถึงความอบอุ่นและสะดวกสบาย รวมไปถึงการบริการแบบพิเศษนั้น มาพร้อมกับสิทธิพิเศษของ เวลคัม เซท ซึ่งเป็นอาหารที่คัดสรรวัตถุดิบอย่างดี พร้อมเครื่องดื่มที่หลากหลายให้คุณได้เลือกสรร โดยทำเป็นที่ได้รับการออกแบบมาเพื่อโรงภาพยนตร์ของเราโดยเฉพาะ ออกแบบโดย ดีน แอนด์ เดลูก้า และ แมนดารินโอเรียลเต็ลช๊อป </p>
+                 <p  >&nbsp; </p>
+                 <p class="ic-bullet">Exclusive Partners</p>
+            <p > &nbsp; &nbsp; &nbsp; โรงภาพยนตร์ เอ็มบาซซี่ ดิโพลแมท สกรีน ได้นำคุณภาพเป็นเลิศในราคาที่เริ่มต้นที่ไม่แพง ถ้าเทียบกับโรงภาพยนตร์วีไอพีทั่วโลกโดยได้รับการสนับสนุนจาก </p>
+                 <p >สปอนเซอร์อย่างเป็นทางการของโรงภาพยนตร์ไม่ว่าจะเป็น 
+                    เอไอเอส, ธนาคารกรุงศรีอยุธยา, เมอร์เซเดซ เบนซ์, โนเบิล, ธนาคารกรุงเทพ </p>
+          </div>
+   			 <p>&nbsp;</p>
+          <div class="information-bottom"></div> 
+        </div>
+   
+     
+    </div>
+    </div> 
+    <?php endforeach; ?>
+  <?php echo $__env->make('frontendTH.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div> 
+<?php echo $__env->make('frontendTH.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</body>
+</html>

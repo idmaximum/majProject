@@ -1,0 +1,42 @@
+@charset utf-8;
+.page-information{background-image:url(../images/bg_information_06.jpg);background-repeat:no-repeat;background-position:center 11px;min-height:800px;margin-bottom:38px;position:relative}
+.rowThumbInformation{text-align:center;float:left;width:330px;overflow:hidden;background-image:url(../images/thumb_infomation_shadow.jpg);background-repeat:no-repeat;background-position:center 90px}
+#head-information{padding:50px 30px 0 437px}
+#apDivThumb{position:absolute;width:990px;height:115px;z-index:2;left:0;top:780px;padding-right:17px;padding-left:17px}
+#pagePromotion{padding:10px}
+.row-promotion{width:300px;float:left;margin-right:52px;padding-bottom:60px}
+.row-promotion.last{margin-right:0}
+.row-promotion h2{margin-top:15px;}
+.timeShow{background-image:url(../images/ic_calendar.png);background-repeat:no-repeat;background-position:left top;display:block;color:#f1e3c2;margin-bottom:5px;padding:6px 6px 6px 32px}
+.page-content{text-align:center;margin-bottom:30px}
+.page-content a{display:inline-block;color:#5b5b5b;text-decoration:none;font-size:18px;background-image:url(../images/bullet-page.png);background-repeat:no-repeat;background-position:center center;padding:16px 18px 15px}
+.page-content a.select,.page-content a:hover{background-image:url(../images/bullet-page-hover.png);color:#fff}
+.title-promotion{border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:#7f6e47;padding-bottom:20px;margin-bottom:20px}
+.content-left-page{float:left;width:640px}
+.content-right-page{float:right;width:340px}
+.content-right-page .timeShow{margin-top:20px;margin-bottom:30px}
+.rowEventNews{overflow:hidden;padding:40px 0}
+.rowEventNews.frist{padding:0 0 40px}
+.divImgNews{float:left;width:300px}
+.divDetailNews{float:right;width:670px}
+#head-information .txtBrown14_2{line-height:1.3}
+.contact-content-left{float:left;width:631px;padding-right:29px}
+.contact-content-right{float:left;padding-left:20px;width:335px}
+.line-brown{background-color:#49494b;height:1px;margin:10px 0}
+.form-contact form table tr td{padding:8px 18px}
+form#formContact p label{position:absolute;top:13px;left:8px;color:#8e8e8e}
+form#formContact p .inputContact{font-family:mongolian_baitiregular,Sans-Serif;font-size:18px;width:100%;background-color:#000;color:#8e8e8e;outline:none;border-top-width:1px;border-top-color:#3d3d3e;border-style:solid none none;padding:10px}
+.button-contact{outline:none}
+.row-contact{clear:both;padding-top:5px;padding-bottom:5px;overflow:hidden}
+.row-contact-left{float:left;width:100px}
+.row-contact-right{float:right;width:234px}
+.email-alertme{background-image:url(../images/input-alertme.jpg);background-repeat:no-repeat;width:230px;height:40px;border:none;outline:none;font-size:18px;color:#999;font-weight:400;font-family:mongolian_baitiregular,Sans-Serif;padding:5px 0 1px 45px}
+#formAlertMe{width:345px;margin-top:18px}
+form#formAlertMe p label{position:absolute;top:14px;left:45px;color:#8e8e8e}
+form#formContact p,form#formAlertMe p{position:relative;font-size:18px;margin:0}
+form#formContact p br,form#formAlertMe p br{display:none}
+@media only screen and (max-width: 928px) {
+ 	.content-left-page{float:none;width:100%; text-align:center}
+	.content-right-page{float:none;width:100%; font-size:1em; padding-top:12px}
+
+}

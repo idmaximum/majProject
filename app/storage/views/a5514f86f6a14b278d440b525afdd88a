@@ -1,0 +1,89 @@
+<?php foreach ($rowNews as $row): ?><?php 
+	 $newsName =	$row->news_title_th;
+	 $newsNameSub =  str_replace_text($newsName); 
+?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title><?php echo $newsName; ?></title> 
+<meta property="og:image" content="http://www.embassycineplex.com/uploads/news/<?php echo $row->news_imageThumb; ?>" />
+<meta name="description" content="<?php echo $row->news_abstract_en; ?>" />
+<meta name="keywords" content="embassy, diplomat, ais, central, ดูหนัง, หนังใหม่, โรงหนัง, โรงภาพยนตร์"/>
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?>
+<?php echo HTML::style('css/screenTH.css'); ?>
+<?php echo HTML::style('css/screenInside.css'); ?> 
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo HTML::style('js/ADGallery/lib/jquery.ad-gallery.css'); ?>
+<?php echo $__env->make('frontendTH.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</head>
+<body>
+<div id="main">
+  <?php echo $__env->make('frontendTH.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+  	<div id="content" class="content-main">
+    <div class="title-promotion">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="614"><a href="<?php echo URL::to('event_activity'); ?>"><img src="<?php echo asset('images/btn-back.png'); ?>" width="90" height="30" class="hoverImg08"></a></td>
+          <td width="319" align="right"><img src="<?php echo asset('images/title-share.png'); ?>" width="50" height="30"></td>
+          <td width="91" align="center">
+          <a href="http://www.facebook.com/sharer.php?u=http://www.embassycineplex.com/event_activity/<?php echo $row->news_ID; ?>/<?php echo $newsNameSub; ?>&t=<?php echo $newsName; ?>" class="hoverImg08" target="_blank"><img src="<?php echo asset('images/ic-fb-share.jpg'); ?>" width="30" height="30"></a> 
+              <a href="http://twitter.com/home?status=<?php echo $newsName; ?> http://www.embassycineplex.com/event_activity/<?php echo $row->news_ID; ?>/<?php echo $newsNameSub; ?>&t=<?php echo $newsName; ?>" class="hoverImg08" target="_blank"><img src="<?php echo asset('images/ic-tw-share.jpg'); ?>" width="30" height="30"></a></td>
+        </tr>
+      </table>
+    </div>
+    <div class="contentPage">
+      <div class="content-left-page">
+       <?php foreach($rowCountGallery as $CountGallery): ?>
+          	<?php $CountGallery = $CountGallery->countGallery?>
+          <?php endforeach; ?>
+         <?php if($CountGallery > 0){?>
+        <div id="gallery" class="ad-gallery">
+      <div class="ad-image-wrapper">
+      </div> 
+      <div class="ad-nav">
+        <div class="ad-thumbs">
+          <ul class="ad-thumb-list">
+          <?php foreach($rowNewsGallery as $rowGallery): ?>
+          <?php $GalleryNews = $rowGallery->news_ImageThumb;?>
+            <li>
+              <a href="<?php echo URL::to("uploads/news/"."$GalleryNews"); ?>">
+                <img src="<?php echo asset('uploads/news'); ?>/<?php echo $GalleryNews; ?>" class="image" style="max-height:100px; ">
+              </a>
+            </li>
+             <?php endforeach; ?>
+          </ul>
+        </div>
+      </div>
+    </div> 
+   		 <?php }else{?>
+      	<img src="<?php echo asset('uploads/news/'.$row->news_imageThumb); ?>"  style="max-width:630px"> 
+      	<?php }?>
+       <?php if($row->news_youtube != ""){
+		   $item_youtube = substr($row->news_youtube,-11,11);
+		?>
+      <iframe width="640" height="400" src="//www.youtube.com/embed/<?php echo $item_youtube; ?>" frameborder="0" allowfullscreen style="margin-top:35px"></iframe>
+      <?php }?> 
+      </div>
+      <div class="content-right-page">
+        <h2 class="txtWhite30 fontTHLang fontTHLang24"><?php echo $newsName; ?></h2>
+        <p class="timeShow"><?php echo date('d F Y', strtotime($row->news_datetime)); ?></p>
+        <div class="txtBrown18_2 fontTHLang"><?php echo nl2br($row->news_detail_th); ?></div>
+      </div>
+      <p class="clear" style="height:60px"></p>
+    </div>
+  </div>    
+  <?php echo $__env->make('frontendTH.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div> 
+<?php echo $__env->make('frontendTH.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</body>
+</html>
+<?php endforeach; ?>
+<?php echo HTML::script('js/ADGallery/lib/jquery.ad-gallery.js'); ?> 
+<script type="text/javascript">
+  jQuery(function() { 
+    var galleries = jQuery('.ad-gallery').adGallery(); 
+  });
+</script>

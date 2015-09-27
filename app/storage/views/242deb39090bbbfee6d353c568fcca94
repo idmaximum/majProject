@@ -1,0 +1,166 @@
+<?php
+	 $countMovieShowtimeAll = '';
+?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta property="og:image" content="http://www.embassycineplex.com/images/share.jpg" />
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?>
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo HTML::style('js/jqueryUI/css/custom-theme/jquery-ui-1.10.4.custom.css'); ?>
+<?php echo HTML::style('js/OrganicTabs/css/style.css'); ?>
+<?php echo HTML::style('js/tooltipster/css/tooltipster.css'); ?>
+<?php echo $__env->make('frontend.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</head>
+<body>
+<div id="main"><?php echo $__env->make('frontend.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <div id="content" class="content-main">
+    <h1 class="showToday">ADVANCE BOOKING</h1>
+    <div class="contentPage">
+      <div class="selectDate" style="text-align:center">
+       <form action="" method="post" id="formDatepicker"> 
+       		<input type="text" id="datepicker" placeholder="Select Date" class="inputDatepicker" name="selectDate"> 
+        </form>
+      </div>
+      <div class="contentAdvance">
+      	<div id="showtimeTab">
+        <div class="menuContent">
+          <ul class="nav ">
+            <?php   
+					for($dayTime = 0;$dayTime <7; $dayTime++){
+						 $dateNowShort  = date('d', strtotime(" +$dayTime day"));
+						 $dateNowFull = date('l', strtotime(" +$dayTime day")); 
+			   ?>
+            <li><a href="#tab<?php echo $dayTime; ?>"  <?php if($dayTime == 0){?>class="current"<?php }?>><?php echo $dateNowFull; ?><div class="txtBrown36"><?php echo $dateNowShort; ?></div></a></li>
+            <?php }#end for?>
+          </ul>
+        </div>
+        <div class="list-wrap">
+          <?php  
+					for($dayTime = 0;$dayTime < 7; $dayTime++){
+						
+						$dayTowmorrow = $dayTime+1;
+					    $dateNow = date('Y-m-d 06:00', strtotime(" +$dayTime day"));  
+						$dateEndShowtime = date('Y-m-d 03:00', strtotime(" +$dayTowmorrow day"));
+						$dateHrNow = date('Y-m-d H:m');
+					?>
+          <ul id="tab<?php echo $dayTime; ?>"  <?php if($dayTime != 0){?> class="hide"<?php }?>>
+            <li><?php foreach($movie_lists as $movie): ?>  
+                <?php  
+		  		 $countMovieShowtimeAll = countMovieShowtimeAll($dateNow,$movie->movieID);
+			  	 $countMovieShowtime = countShowtime($dateNow, $dateEndShowtime,$movie->movieID,$movie->showtime_SystemType); 
+				 
+				   $nameMovie  = $movie->movie_Name_EN;
+				   $nameMovieSub =  str_replace_text($nameMovie); 
+				   if($countMovieShowtime != ''){
+				?><div class="rowShowToday">
+                	<div class="rowShowTodayImage"><a href="<?php echo URL::to("movie/$movie->movieID/$nameMovieSub"); ?>"><img src="<?php echo asset("uploads/movie/$movie->movie_Img_Thumb"); ?>" width="140" height="210" class="hoverImg08"></a></div>
+                <div class="rowShowTodayDetail">
+                  <h2 class="txtGold24"><a href="<?php echo URL::to("movie/$movie->movieID/$nameMovieSub"); ?>"><?php echo $movie->movie_Name_EN; ?></a></h2>
+                  <p class="timeRate txtBrown20_2"><?php echo $movie->movie_Duration; ?> Min</p>
+                  <p><?php
+								if($movie->movie_Rating == "ส."){ 
+									$imgRate = "rate_raise.png";
+								 }else if($movie->movie_Rating == "ทป."  || $movie->movie_Rating == "TBC"){ 
+									$imgRate = "rate_general_en.png";
+								 }else if($movie->movie_Rating == "น13+"){ 
+									$imgRate = "rate_up_13_en.png";
+								 }else if($movie->movie_Rating == "น15+"){ 
+									$imgRate = "rate_up_15_en.png";
+								 }else if($movie->movie_Rating == "น18+"){ 
+									$imgRate = "rate_up_18_en.png";
+								  }else if($movie->movie_Rating == "ฉ20-"){ 
+									$imgRate = "rate_under_20_en.png";
+								 }
+						 //********* System **
+						   if($movie->showtime_SystemType == "VS00000001"){ 
+								$imgSystem = "type_digital.png";
+								$systemName = '2D';
+							 }else if($movie->showtime_SystemType == "0000000001"){ 
+								$imgSystem = "type_3d.png";
+								$systemName = 'D3D';
+							 } 
+					?><img src="<?php echo asset("images/icon/$imgRate"); ?>" alt="<?php echo $movie->movie_Rating; ?>" style="margin-right:3px" > <img src="<?php echo asset("images/icon/$imgSystem"); ?>" alt="<?php echo $systemName; ?>"></p>
+                </div>
+                <?php	
+				  $numKL = 1;
+				  $dayTimeNight = date('Y-m-d 03:00', strtotime("$dateNow +1 day")); 
+				  $countShowtime =  countMovieShowtimeDay($dateNow, $dayTimeNight, $movie->showtime_Movie_strID , $movie->showtime_SystemType);
+				  ?>
+                <div class="rowShowTodayShowtime  <?php if($countShowtime > 6): ?>countShowtime<?php endif; ?>">
+            <?php foreach($movie_showtimes  as $movieShowtime): ?>
+             <?php if($movie->movie_strID === $movieShowtime->showtime_Movie_strID && $movie->showtime_SystemType == $movieShowtime->showtime_SystemType): ?>
+              <?php if( date('Y-m-d H:i', strtotime($movieShowtime->showtime_dtmDate_Time)) >= $dateNow &&   date('Y-m-d H:i', strtotime($movieShowtime->showtime_dtmDate_Time)) <= $dayTimeNight): ?> 
+                  <?php
+					   if($movieShowtime->showtime_dtmDate_Time < "$dateHrNow"){
+							 $classTime = "timeAgo";
+						}else if($movieShowtime->showtime_dtmDate_Time >= "$dateHrNow"){#if time 
+							if($numKL == 1){
+							   $classTime = "timeNow";
+							  }else{#end if
+							   $classTime = "timeFuture";
+							 }
+							 $numKL++;
+						}
+					 ?><div class="rowShowTime <?php echo $classTime; ?>"><?php if($movieShowtime->showtime_strName == 'Theatre 1'): ?>
+                    <div class="showTimeHilight"><span title="Theater 1" class="tooltip theater1Icon"></span></div><?php endif; ?> 
+                    <?php 
+						   $soundAttributes = $movieShowtime->showtime_soundAttributes;
+						   $audio 		= substr($soundAttributes,0,2); 
+						   $subtitle 	= substr($soundAttributes, -2);
+					  ?>
+                   <a href="#" title="Audio: <?php echo subLanguage($audio); ?>   / Subtitle: <?php echo subLanguage($subtitle); ?>" class="tooltip"><?php echo date('H.i', strtotime($movieShowtime->showtime_dtmDate_Time)); ?></a>	 <?php echo $movieShowtime->showtime_soundAttributes; ?></div>
+                  		<?php endif; ?>
+                  	<?php endif; ?>
+                  <?php endforeach; ?></div>
+                <p class="clear"></p>
+              </div><?php }#end count movieshowtime?>
+             <?php endforeach; ?> 
+            <?php if($countMovieShowtimeAll  == ''): ?><div class="noUpdateShowtime">No Updated Showtime</div><?php endif; ?>
+             </li>
+          </ul>
+          <?php }#end for?>
+        </div> 
+      </div>
+      </div> 
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <?php echo $__env->make('frontend.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> </div>
+<?php echo $__env->make('frontend.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo HTML::script('js/jqueryUI/js/jquery-ui-1.10.4.custom.js'); ?>
+<?php echo HTML::script('js/placeholders.min.js'); ?>
+<?php echo HTML::script('js/OrganicTabs/js/organictabs.jquery.js'); ?>
+<?php echo HTML::script('js/tooltipster/js/jquery.tooltipster.js'); ?>
+<script>
+  jQuery(function() {
+    jQuery( "#datepicker" ).datepicker({ minDate: 0, maxDate: "+12D" , dateFormat: "yy-mm-dd",
+		 onSelect: function(dateText, inst) { 
+			  var dateAsString = dateText; //the first parameter of this function 
+			  var data = jQuery("#formDatepicker").serialize();	
+			  
+			   jQuery.ajax({
+					   type: "GET",
+					   url: "datepicker/dataTab",
+					   data: data,
+					   cache: false,
+					success: function(data){ 
+					  jQuery('.contentAdvance').html(data); 
+					  jQuery("#showtimeTab").organicTabs({"speed": 200});
+					  jQuery('.tooltip').tooltipster();
+					}
+				  });	
+		   }				   
+	});	 
+	jQuery("#showtimeTab").organicTabs({"speed": 200});
+	jQuery('.tooltip').tooltipster(); 
+  });
+  </script>
+</body>
+</html>

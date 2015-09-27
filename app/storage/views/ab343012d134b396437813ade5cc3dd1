@@ -1,0 +1,26 @@
+<?php  $filename = Request::path();
+		$subUrl = substr("$filename",3);?>
+<div id="header" >
+  <div id="divlogo" class="content-main"> <a href="<?php echo URL::to('home'); ?>"><img src="<?php echo asset('images/logo.png'); ?>" width="171" height="124" alt="Embassy" class="hoverImgLogo"></a> </div>
+  <div class="menuTop">
+    <div class="content-main">
+      <ul>
+        <li <?php echo ($filename  == "home")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('th/home'); ?>">Today</a></li>
+        <li <?php echo ($filename =="advancebooking")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('th/advancebooking'); ?>">Advance Booking</a></li>
+        <li <?php echo ($filename =="comingsoon")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('th/comingsoon'); ?>">Coming soon</a></li>
+        <li <?php echo ($filename =="information")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('th/information'); ?> ">information</a></li>
+        <?php   /* <li <?php echo ($filename =="contactus")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('contactus'); ?> ">CONTACT US</a></li> */ ?>
+        <li <?php echo ($filename =="promotion" || $filename =="promotionDetail")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('th/promotion'); ?>">promotion</a></li>
+        <li <?php echo ($filename =="event_activity" || $filename =="event_activityDetail.php")? "class=\"select\"" : "";?>><a href="<?php echo URL::to('th/event_activity'); ?>">Event &amp; Activity</a></li>
+      </ul>
+      <div class="wrapper-demo">
+        <div id="dd" class="wrapper-dropdown-2" tabindex="1">TH
+          <ul class="dropdown">
+            <li><a href="<?php echo URL::to("$subUrl"); ?>">EN</a></li>
+        	 <?php   /*<li><a href="#">CN</a></li>*/?>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

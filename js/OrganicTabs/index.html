@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	
+	<title>Organic Tabs</title>
+	
+	<link rel="stylesheet" href="css/style.css">
+	
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js'></script>
+    <script src="js/organictabs.jquery.js"></script>
+    <script>
+        $(function() {
+    
+        
+            
+            $("#showtimeTab").organicTabs({
+                "speed": 200
+            });
+    
+        });
+    </script>
+</head>
+
+<body>
+
+	<div id="page-wrap">
+
+	 
+	     <div id="showtimeTab">
+					
+    		<ul class="nav">
+                <li class="nav-one"><a href="#tab1" class="current">Feat<br>
+ured</a></li>
+                <li class="nav-two"><a href="#tab2">Core</a></li> 
+            </ul>
+    		
+    		<div class="list-wrap">
+    		
+    			<ul id="tab1">
+    				<li> Date Display with Sprites </li>
+    			</ul>
+                <ul id="tab2" class="hide">
+    				<li> Date Display with Sprites </li>
+    			</ul>
+        		 
+    		 </div> <!-- END List Wrap -->
+		 
+		 </div> <!-- END Organic Tabs (Example One) -->
+	
+		 <p>This is some content below the tabs. I will be moved up or down to accommodate the tabbed area above me.</p>
+	
+	</div>
+	
+</body>
+
+</html>

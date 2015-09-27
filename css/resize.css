@@ -1,0 +1,28 @@
+@media only screen and (max-width: 728px) {
+  .top__downloads{ display:none}
+  .content-main{ width:100%; display:block}
+  #main{ background-image:none}
+  .on_mobile__h{ display:none}
+  .on_mobile__s{ display:block}
+  .content-main.on_mobile__s ul{ text-align:center}
+
+  #footer{ min-width:100% ; display:block}
+  .rowShowTodayImage{  zoom:0.9}
+  .rowShowTodayDetail{ float:none; width:100%; padding-top:0; display:inline}
+  .rowShowTodayShowtime{   text-align:left ;width:100%; padding-top:0; float: initial; padding-top:35px}
+ 
+	
+	
+  .menuTop .content-main ul li a{padding:20px 3px 16px 3px}
+  .img__rating{ margin-top: 12px;  display:inline }
+   .img__rating img{ padding-top: 12px;  }
+   .margineBottom{ margin-bottom:120px}
+  .timeRate{  margin-right:5px; display:inline}
+.rowShowTime {zoom:0.8}
+
+  .content-left-page{float:none;width:100%; text-align:center}
+  .content-right-page{float:none;width:100%;  padding:12px }
+  .fontMobile{font-size:19px!important;}
+  #showtimeTab .nav li, #showtimeTab .nav li:last-child{width:14.2%}
+ 
+}

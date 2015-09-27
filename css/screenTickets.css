@@ -1,0 +1,145 @@
+@charset "utf-8";
+.buttonBack, .buttonBackNo {
+	outline: none;
+	border-radius:2px;
+} 
+.titleMovie {
+	padding-bottom: 15px
+}
+.txtSoundTrack {
+	color: #b0b0b0;
+	font-size: 17px
+}
+.detailTable td {
+	background-color: #101010;
+	padding: 18px;
+	border: 1px solid #3e3e3e;
+	color: #8e8e8e;
+	text-align: center;
+	font-size: 18px
+}
+.content-seat-type { 
+	padding-bottom: 40px;
+	text-align: center;
+	font-size: 18px;
+	text-align: center;
+}
+.content-next {
+	background-image: url(../images/bg-bottom-seat.png);
+	background-repeat: no-repeat;
+	background-position: center 5px;
+	text-align: center;
+	padding-top: 33px;
+	margin-bottom: 70px;
+	padding-right: 2px;
+	padding-bottom: 2px;
+	padding-left: 2px;
+}
+.row-seat {
+	text-align: center;
+	float: left;
+	width: 341px;
+	margin-bottom: 15px;
+	margin-top:35px;
+}
+form.formPayment p {
+	position: relative;
+	margin: 0px 0 15px 0;
+}
+form.formPayment p label {
+	position: absolute;
+	top: 14px;
+	left: 55px;
+}
+form.formPayment p br {
+	display: none;
+}
+.formPayment { 
+	margin-top: 50px;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-left: auto;
+}
+.cEmails {
+	background-image: url(../images/bg_payment_email.png);
+	background-repeat: no-repeat;
+	height: 46px;
+	width: 281px;
+	border: none;
+	padding-left: 55px;
+	border-radius:2px;
+}
+.cMobile {
+	background-image: url(../images/bg_payment_tel.png);
+	background-repeat: no-repeat;
+	height: 46px;
+	width: 281px;
+	border: none;
+	padding-left: 55px;
+	border-radius:2px;
+}
+.total-price {
+	margin: 55px;
+	text-align: center;
+	color: #8e8e8e;
+	font-size: 22px
+}
+.divBtnSelectSeat {
+	width: 155px;
+	margin: auto
+}
+.inputNumCount {
+	background-image: url(../images/bg_seat_type.png);
+	background-repeat: repeat-x;
+	width: 55px;
+	border: none;
+	outline: none;
+	padding: 13px 3px;
+	height: 15px;
+	text-align: center;
+	font-size:18px
+}
+.btnCountSeat{ cursor:pointer}
+.tableSeats{ width:100%}
+.tableSeatsLeft, .tableSeatsRight{ width:350px; color:#8e8e8e}
+.tableSeatsLeft div{
+	text-align: left!important;
+	background-image: url(../images/bg_nav_left.png);
+	background-repeat: no-repeat;
+	background-position: left 2px;
+	padding: 10px;
+}
+.tableSeatsRight div{ text-align:right!important; 
+	background-image: url(../images/bg_nav_right.png);
+	background-repeat: no-repeat;
+	background-position: right 2px;
+	padding: 10px;}
+	.contentOrderComplate {
+	padding: 45px;
+	border: 1px solid #3e3e3e;
+	margin-bottom: 38px;
+	background-color: #101010;
+	color: #8e8e8e;
+	margin-top: 15px;
+	font-size:18px;
+}
+.detailComplate td{ padding:10px 0}.contentQrcode {
+	padding: 7px;
+	width: 250px;
+	margin: auto;
+	background-color: #000;
+	border: 1px solid #3e3e3e;
+}
+.linePayment{ height:1px; margin:15px 0; background-color:#3e3e3e}
+.statusSold{ color:#8e8e8e}
+.seatSelect{ cursor:pointer}
+.cName {
+background-image: url(../images/bg_theatre_fill_name.png);
+background-repeat: no-repeat;
+height: 46px;
+width: 281px;
+border: none;
+padding-left: 55px;
+border-radius:2px;
+}.content-seat-type ul{ text-align:center;}.content-seat-type ul li{ display:inline-block; width:331px}
+.btnNoBooking{ cursor:default}

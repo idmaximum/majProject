@@ -1,21 +1,17 @@
 @extends('layout.master')
 @section('content')
+{{HTML::style('js/colorbox-master/example4/colorbox.css')}}
 <ul class="breadcrumbs">
-  <li><a href="cenima">Home &gt;<i class="iconfa-home"></i></a> <span class="separator"></span></li>
+  <li><a href="movie#theater">Home &gt;<i class="iconfa-home"></i></a> <span class="separator"></span></li>
   <li>News</li>
 </ul>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td width="70%"><h1 class="pagetitle">News</h1></td>
-    <td width="30%" class="text-center"><form class="form-inline" role="form">
-        <div class="form-group">
-          <label class="sr-only" for="exampleInputEmail2">Keyword</label>
-          <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Keyword">
-        </div>
-        <button type="submit" class="btn btn-default">Search</button>
-      </form></td>
+    <td width="30%" class="text-center"> </td>
   </tr>
 </table>
+<div id="result" class="well well-sm" style="margin:10px 20px">ได้ทำการแก้ไขอันดับการแสดงผลเรียบร้อยแล้วค่ะ</div> 
 <p class="line-brown"></p>
 <div class="detail-page">
   <form action="news" method="post">
@@ -23,7 +19,7 @@
       <tr>
         <td><table width="100%" border="0" cellspacing="4" cellpadding="0">
             <tr>
-              <td width="71%" align="left"><a class="btn btn-success" href="newsForm#content">เพิ่ม | Add New</a></td>
+              <td width="71%" align="left"><a class="btn btn-success" href="{{URL::to('backoffice_management/newsForm#content')}}">เพิ่ม | Add New</a></td>
               <td width="18%" align="left">
               <select name="action_up" class="form-control"id="action_up" style="float:right">
                   <option value="" selected="selected">-เลือก-</option>
@@ -48,28 +44,31 @@
                 <td width="9%"><strong>Func.</strong></td>
               </tr>
             </thead>
-            <tbody> 
+            <tbody id="table-1">
             @foreach($sbdNews as $row)
-            <tr>
-              <td>{{$row->news_title}}</td>
+            <tr id="{{$row->news_ID}}">
+              <td>{{$row->news_title_th}}</td>
               <td align="center">
-              @if($row->news_image_thumb != '')
-              <img src="{{asset('uploads/news')}}/{{$row->news_image_thumb}}" alt="{{$row->news_title}}" id="img_{{$row->news_id}}" style="max-width:300px" />
+                @if($row->news_imageThumb != '')
+                  <img src="{{asset('uploads/news')}}/{{$row->news_imageThumb}}" alt="{{$row->news_title_th}}" id="img_{{$row->news_ID}}" style="max-width:300px" />
+                  @else
+                  ไม่มีรูปประกอบ
+                  @endif 
+              <p style="padding-top: 8px"><a href="newsGallery/{{$row->news_ID}}#content" class="iframe">เพิ่มรูป Gallery</a></p></td>
+              <td align="center">{{date("d F Y", strtotime($row->news_createDate)) }}</td>
+              <td align="center">  
+              @if($row->news_publish == '1')
+                เผยแพร่
               @else
-               ไม่มีรูปประกอบ
-              @endif
-              </td>
-              <td align="center">{{date("d F Y", strtotime($row->news_create_date)) }}</td>
-              <td>&nbsp;</td>
-              <td align="center"><a href="newsForm/{{$row->news_id}}"><img src="{{asset('images/png/glyphicons_030_pencil.png')}}" width="20" height="20" /></a></td>
+           	   <em>ซ่อนการเผยแพร่</em> @endif</td>
+              <td align="center"><a href="newsFormEdit/{{$row->news_ID}}#content"><img src="{{asset('images/png/glyphicons_030_pencil.png')}}" width="20" height="20" /></a></td>
               <td align="center">
               <label class="checkbox-inline">
-                  <input type="checkbox"   name="newsID[]"  value="{{$row->news_id}}">
+                  <input type="checkbox"   name="newsID[]"  value="{{$row->news_ID}}">
                 </label></td>
             </tr>
             @endforeach
-              </tbody>
-            
+              </tbody> 
           </table></td>
       </tr>
       <tr>
@@ -79,4 +78,19 @@
   </form>
 </div>
 <p class="line-brown clear"></p>
+{{ HTML::script('js/jquery.tablednd_0_5.js') }} 
+{{ HTML::script('js/colorbox-master/jquery.colorbox.js') }} 
+<script type="text/javascript">
+	jQuery(document).ready(function(){ 
+		jQuery(".iframe").colorbox({iframe:true, width:900, height:600}); 
+		jQuery('#table-1').tableDnD({
+        	onDrop: function(table, row) {
+			var order= jQuery.tableDnD.serialize('id');
+			jQuery.ajax({type: "GET",url: "news/ajaxCheck/dragDropNews", data: order, 
+			 success:
+				 jQuery("#result").fadeIn(500).delay(5000).fadeOut(500)});
+    		}
+    	});
+	}); 
+</script> 
 @stop

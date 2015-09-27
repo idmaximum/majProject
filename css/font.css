@@ -1,5 +1,6 @@
 @charset "utf-8";
 /* CSS Document */
+.txtBlack20 ,.txtBlack20 a{font-size: 20px;color: #000;text-decoration:none}
 .txtBlack24 ,.txtBlack24 a{font-size: 24px;color: #000;text-decoration:none}
 .txtBlack30 ,.txtBlack30 a{font-size: 30px;color: #000;text-decoration:none}
 .txtBlack40 {font-size: 40px;color: #000;}
@@ -20,17 +21,37 @@
 .txtWhite12,.txtWhite12 a{ font-size: 12px;color: #FFF;text-decoration:none}
 .txtWhite14,.txtWhite14 a{ font-size: 14px;color: #FFF;text-decoration:none}
 .txtWhite16,.txtWhite16 a{ font-size: 16px;color: #FFF;text-decoration:none}
-.txtWhite18,.txtWhite18 a{ font-size:18px;color: #FFF;text-decoration:none}
+.txtWhite18,.txtWhite18 a{ font-size:18px;color: #f1e3c2;text-decoration:none}
+.txtWhite22,.txtWhite22 a{ font-size:22px;color: #f1e3c2!important;text-decoration:none}
+.txtWhite20,.txtWhite20 a{ font-size:18px;color: #f1e3c2;text-decoration:none}
+.txtWhite20_2,.txtWhite20_2 a{ font-size:20px;color: #FFF;text-decoration:none}
 .txtWhite25,.txtWhite25 a{ font-size:25px;color: #FFF;text-decoration:none}
+.txtWhite30,.txtWhite30 a{ font-size:30px;color: #FFF;text-decoration:none}
 .txtWhite38,.txtWhite38 a{ font-size:38px;color: #FFF;text-decoration:none}
 .txtWhite42,.txtWhite42 a{ font-size:42px;color: #FFF;text-decoration:none}
 .txtBrown11,.txtBrown11 a{ font-size: 11px;color: #6b6b6c;text-decoration:none}
 .txtBrown12,.txtBrown12 a{ font-size: 12px;color: #6b6b6c;text-decoration:none}
 .txtBrown14,.txtBrown14 a{ font-size: 14px;color: #6b6b6c;text-decoration:none}
-.txtBrown12_2,.txtBrown12_2 a{ font-size: 12px;color: #919193;text-decoration:none}
-.txtBrown14_2,.txtBrown14_2 a{ font-size: 14px;color: #919193;text-decoration:none}
-.txtBrown16_2,.txtBrown16_2 a{ font-size: 16px;color: #919193;text-decoration:none}
-.txtBrown18_2,.txtBrown18_2 a{ font-size: 18px;color: #919193;text-decoration:none}
+.txtBrown12_2,.txtBrown12_2 a{ font-size: 12px;color: #8e8e8e;text-decoration:none}
+.txtBrown14_2,.txtBrown14_2 a{ font-size: 14px;color: #8e8e8e;text-decoration:none}
+.txtBrown16_2,.txtBrown16_2 a{ font-size: 16px;color: #8e8e8e;text-decoration:none}
+.txtBrown36,.txtBrown36 a{ font-size: 32px;color: #8e8e8e;text-decoration:none} 
+.txtBrown18_2,.txtBrown18_2 a{ font-size: 18px;color: #8e8e8e;text-decoration:none}
+.txtBrown20_2,.txtBrown20_2 a{ font-size: 18px;color: #8e8e8e;text-decoration:none}
+.txtBrown20_3,.txtBrown20_3 a{ font-size: 20px;color: #8e8e8e;text-decoration:none}
+.txtBrown24,.txtBrown24 a{ font-size: 20px;color: #8e8e8e;text-decoration:none}
+
+.txtBrown18_2 a:hover,.txtBrown16_2 a:hover{color: #c1ad7f;}
+.txtGold12, .txtGold12 a{ font-size: 12px;color: #f1e3c2;text-decoration:none}
+.txtGold14, .txtGold14  a{ font-size: 14px;color: #f1e3c2;text-decoration:none}
+.txtGold16, .txtGold a{ font-size: 16px;color: #f1e3c2;text-decoration:none}
+.txtGold18, .txtGold18 a{ font-size: 18px;color: #f1e3c2;text-decoration:none}
+.txtGold24, .txtGold24 a{ font-size:20px;color: #f1e3c2;text-decoration:none}
+.txtGold30, .txtGold30 a{ font-size:30px;color: #f4e2ba;text-decoration:none}
+
+.txtGold36, .txtGold36 a{ font-size:32px;color: #f1e3c2;text-decoration:none}
+.txtGold24, .txtGold24 a{ font-size:24px;color: #f1e3c2;text-decoration:none}
+.txtGold26, .txtGold26 a{ font-size:26px!important;color: #f1e3c2;text-decoration:none}
 .txtOrange14,.txtOrange14 a{ font-size: 14px;color: #a9ca47;text-decoration:none}
 .txtRed12,.txt_12_red{ color:#F00; font-size: 12px; text-decoration:none}
 .txtGreen12,.txt_12_green{color:#5b9002;font-size: 12px;}

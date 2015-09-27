@@ -1,0 +1,943 @@
+<?php
+	 $logTable = "log_vistaws_" . date('Y_m'); 
+		//*********************************
+		
+		$wsdl = "http://10.121.130.25/WSVistaWebClient/TicketingService.asmx?WSDL"; 
+		//$wsdl = "http://10.100.101.146/WSVistaWebClient/TicketingService.asmx?WSDL"; 
+		$client = new SoapClient($wsdl, array('trace' => true));  
+		 
+		if(Session::get('userSessionID') != ''){ //cancel order 
+		
+				$userSessionID = Session::get('userSessionID');
+			 
+				$params = array(	'OptionalClientClass'	=> "WWW",
+									'OptionalClientId' 		=> "111.111.111.112", 
+									'OptionalClientName'	=> "WEB",
+									'UserSessionId'			=> $userSessionID);
+				$result = $client->__soapCall('CancelOrder', array($params));
+				
+				$cancelResult = $result->Result;
+				$CancelOrderRequest = json_encode($params);
+				$CancelOrderResponse = json_encode($result);
+								
+				$dataTblLog =  DB::table($logTable)
+										->where('user_session_id' , $userSessionID) 
+										->pluck('soap_process'); 			 
+				$SOAPprocess = $dataTblLog.', CancelOrder';
+				
+				DB::table($logTable)
+						  ->where('user_session_id', $userSessionID)
+						  ->update(array('soap_process'			=> $SOAPprocess, 
+										 'status' 	=> $cancelResult, 
+										 'cancelorder_request' 	=> $CancelOrderRequest, 
+								  		 'cancelorder_response' => $CancelOrderResponse)); 
+				 
+			 	Session::forget('userSessionID'); 
+		}#end remove
+		
+		  list($usec, $sec) = explode(" ", microtime());
+		  $userSessionID  = strval("01WWW" . date('ymdHis', $sec) . str_pad(intval($usec * 1000), 3, '0', STR_PAD_LEFT) . str_pad(1, 5, '0', STR_PAD_LEFT));
+		  
+	   Session::put('userSessionID', $userSessionID);
+	   $userSessionID = Session::get('userSessionID');
+	 
+	//echo json_encode($userTickets);
+	
+	 $params = array(	'OptionalClientClass'			=> "WWW",
+					'OptionalClientId' 				=> "111.111.111.112", 
+					'OptionalClientName'			=> "WEB",
+					'UserSessionId'					=> $userSessionID,
+					'CinemaId' 						=> "0000008001", 
+					'SessionId'						=> $sessID,
+					'TicketTypes'					=> $ticketTypes,
+					'ReturnOrder'					=> true,
+					'ReturnSeatData'				=> false,
+					'ProcessOrderValue'				=> false,
+					'UserSelectedSeatingSupported'	=> true,
+					'SkipAutoAllocation'			=> false,
+					'IncludeAllSeatPriorities'		=> false,
+					'IncludeSeatNumbers' 			=> true,
+					'ExcludeAreasWithoutTickets'	=> false,
+					'ReturnDiscountInfo'			=> false,
+					'BookingFeeOverride' 			=> null,
+					'BookingMode'					=> 1,
+					'ReorderSessionTickets'			=> false); 
+		  
+		  $result = $client->__soapCall('AddTickets', array($params)); 
+		  
+	/*		echo "Add Ticket : " . $result->Result . "<br />";
+			echo "Seat Allocated : " . json_encode(!$result->SeatsNotAllocated) . "<br /><br />";*/ 
+		 
+	 if($result->Result != 'OK'){
+			 
+			 ?>
+<meta http-equiv="refresh" content="0;URL=<?php echo URL::to("kiosk/selectTicketerror/$movieID/$sessID"); ?>" />
+<?php 
+			  exit(); 
+		  }	/* */#endif 
+		  
+		  $valueInCents = $result->Order->TotalValueCents;
+		  $bestSeats = $result->Order->Sessions->Session->Tickets->Ticket;  
+		  $priceTotal =  $valueInCents;
+/*
+echo "Add Ticket : " . $result->Result . "<br />";
+echo "Seat Allocated : " . json_encode(!$result->SeatsNotAllocated) . "<br /><br />";*/ 
+ 
+
+$numSeatType =  sizeof($userTickets);//get count Seat Type
+
+$ticketList = array(); 
+$ticketName = array();
+$ticketPrice = array();
+//****************
+if (sizeof($bestSeats) > 1) 
+{
+	foreach ($bestSeats as $bestSeat) 
+	{
+	//	echo "&nbsp;&nbsp;- " . $bestSeat->Description . " : " . $bestSeat->SeatData . "<br />";
+
+		for ($idx = 0; $idx < sizeof($userTickets); $idx++) 
+		{ 
+			if ($userTickets[$idx]['TicketTypeCode'] == $bestSeat->TicketTypeCode) 
+			{
+				if (strlen($bestSeat->SeatData) > 0) 
+				{
+					$userTickets[$idx]['SeatsLeft'] -= $userTickets[$idx]['SeatsPerTicket'];
+				}
+			}
+		}
+
+		if (strlen($bestSeat->SeatData) > 0) 
+		{
+			$ticketList[] = $bestSeat->SeatData;
+			$ticketName[] = $bestSeat->Description;
+			$ticketPrice[] = $bestSeat->PriceCents;
+		}
+	}
+}
+else
+{
+	$bestSeat = $bestSeats;
+	//echo "&nbsp;&nbsp;- " . $bestSeat->Description . " : " . $bestSeat->SeatData . "<br />";
+	
+
+	for ($idx = 0; $idx < sizeof($userTickets); $idx++) 
+	{ 
+		if ($userTickets[$idx]['TicketTypeCode'] == $bestSeat->TicketTypeCode) 
+		{
+			if (strlen($bestSeat->SeatData) > 0) 
+			{
+				$userTickets[$idx]['SeatsLeft'] -= $userTickets[$idx]['SeatsPerTicket'];
+			}
+		}
+	}
+
+	if (strlen($bestSeat->SeatData) > 0) 
+	{
+		$ticketList[] = $bestSeat->SeatData;
+		$ticketName[] = $bestSeat->Description;
+		$ticketPrice[] = $bestSeat->PriceCents;
+	}
+} 
+//**********
+$addTicketResult = $result->Result;
+  $addTicketRequest = json_encode($params);
+  $addTicketResponse = json_encode($result->Order->Sessions->Session->Tickets->Ticket);
+
+ 
+
+ $dateNow = date('Y-m-d H:i:s');
+ 
+ DB::table($logTable)->insert(
+    array(
+	'soap_process' => 'AddTickets', 
+	'date_time' => $dateNow, 
+	'status' => $addTicketResult, 
+	'addticket_status' => $addTicketResult, 
+	'addticket_request' => $addTicketRequest, 
+	'addticket_response' =>  $addTicketResponse ,
+	'session_id' =>  $sessID , 
+	'user_session_id' => $userSessionID )
+);
+/*  
+//************ Get order ****
+
+$params = array(	'OptionalClientClass'			=> "WWW",
+					'OptionalClientId' 				=> "111.111.111.112", 
+					'OptionalClientName'			=> "WEB",
+					'UserSessionId'					=> $userSessionID,
+					'ProcessOrderValue'				=> false,
+					'BookingMode'					=> 0);
+
+$result = $client->__soapCall('GetOrder', array($params));
+*/
+//******** ******** ******** ******** ******** ******** ******** ********
+$params = array(	'OptionalClientClass'			=> "WWW",
+					'OptionalClientId' 				=> "111.111.111.112", 
+					'OptionalClientName'			=> "WEB",
+					'CinemaId'						=> "0000008001",
+					'SessionId'						=> $sessID,
+					'UserSessionId'					=> $userSessionID,
+					'ReturnOrder'					=> true,
+					'ExcludeAreasWithoutTickets'	=> false,
+					'IncludeBrokenSeats'			=> true,
+					'IncludeHouseSpecialSeats'		=> true,
+					'IncludeGreyAndSofaSeats'		=> true,
+					'IncludeAllSeatPriorities'		=> true,
+					'IncludeSeatNumbers'			=> true);
+$result = $client->__soapCall('GetSessionSeatData', array($params));
+
+//************
+ $seatData = json_decode(json_encode($result->SeatLayoutData->AreaCategories->AreaCategory), true); 
+$GetSessioResult = $result->Result;
+$GetSessionRequest = json_encode($params);
+ $GetSessionResponse = json_encode($seatData); 
+
+//****	Update Update Log	*****
+  	$dataTblLog =  DB::table($logTable)
+						  ->where('user_session_id' , $userSessionID) 
+						  ->pluck('soap_process'); 			 
+	$SOAPprocess = $dataTblLog.', GetSessionSeatData';
+ 
+ 	 DB::table($logTable)
+			->where('user_session_id', $userSessionID)
+			->update(array('soap_process'			=> $SOAPprocess, 
+						   'status' 	=> $GetSessioResult, 
+						   'getsessionseat_status' 	=> $GetSessioResult, 
+						   'getsessionseat_request' 	=> $GetSessionRequest, 
+						   'getsessionseat_response'	=> $GetSessionResponse));  
+//******* End Update Log	*****
+//*********** End Get order **********
+
+$seatLayout = $result->SeatLayoutData->Areas->Area;
+//echo "<br />-------- -------- -------- -------- -------- -------- -------- --------<br />";
+
+$areaCount = 0;
+$rowCount = 0;
+$colCount = 0;
+
+if (sizeof($seatLayout) > 1) 
+{
+	$maxRow = 0;
+	$maxCol = 0;
+	foreach ($seatLayout as $eachArea) 
+	{
+		if ($maxRow < $eachArea->RowCount) 
+		{
+			$maxRow = $eachArea->RowCount;
+		}
+		if ($maxCol < $eachArea->ColumnCount) 
+		{
+			$maxCol = $eachArea->ColumnCount;
+		}
+	}
+
+	$areaCount = sizeof($seatLayout);
+	$rowCount = $maxRow;
+	$colCount = $maxCol;
+}
+else
+{
+	$areaCount = 1;
+	$rowCount = $seatLayout->RowCount;
+	$colCount = $seatLayout->ColumnCount;
+}
+
+/*echo "<br />";
+echo "Number of Area : " . $areaCount . "<br />";
+echo "Row : " . $rowCount . "<br />Column : " . $colCount . "<br />"; 
+echo "<br />-------- -------- -------- -------- -------- -------- -------- --------<br />";*/
+
+$seatLayoutArray = json_decode(json_encode($seatLayout), true);
+$allSeats = array();
+$seatsDesc = array();
+
+for ($areaIdx = 0; $areaIdx < $areaCount; $areaIdx++) 
+{ 
+	$areaCategoryCode = "";
+	$description = "";
+
+	$userTicketAreaCatCode = "";
+	$userTicketAreaNumber = 0;
+
+	if ($areaCount > 1) 
+	{
+		$userTicketAreaCatCode = $seatLayoutArray[$areaIdx]['AreaCategoryCode'];
+		$userTicketAreaNumber = $seatLayoutArray[$areaIdx]['Number'];
+	}
+	else
+	{
+		$userTicketAreaCatCode = $seatLayoutArray['AreaCategoryCode'];
+		$userTicketAreaNumber = $seatLayoutArray['Number'];
+	}
+
+	foreach ($userTickets as $idx => $eachTicket) 
+	{
+		if ($eachTicket['AreaCatCode'] == $userTicketAreaCatCode) 
+		{
+			$userTickets[$idx]['AreaNumber'] = $userTicketAreaNumber;
+		}
+	}
+
+	for ($rowIdx = 0; $rowIdx < $rowCount; $rowIdx++) 
+	{ 
+		$rowData = array();
+		if ($areaCount > 1) 
+		{
+			$rowData = $seatLayoutArray[$areaIdx]['Rows']['Row'][$rowIdx];
+			$areaCategoryCode = $seatLayoutArray[$areaIdx]['AreaCategoryCode'];
+			$description = $seatLayoutArray[$areaIdx]['Description'];
+		}
+		else
+		{
+			$rowData = $seatLayoutArray['Rows']['Row'][$rowIdx];
+			$areaCategoryCode = $seatLayoutArray['AreaCategoryCode'];
+			$description = $seatLayoutArray['Description'];
+		}
+		$phyName = "";
+		$row = array();
+
+		if (sizeof($allSeats) > $rowIdx)
+		{
+			$row = $allSeats[$rowIdx];
+		}
+
+		if ($rowData['Seats']) 
+		{
+			$phyName = $rowData['PhysicalName'];
+		}
+
+		$numberOfSeats = 0;
+		$leastIndexSeat = $colCount;
+		$mostIndexSeat = 0;
+
+		for ($colIdx = 0; $colIdx < $colCount; $colIdx++) 
+		{ 
+			$blankSeat['Status'] = "Blank";
+			$col = $blankSeat;
+
+			if (sizeof($row) > $colIdx) 
+			{
+				$col = $row[$colIdx];
+			}
+			
+			if (sizeof($rowData['Seats']) > 0) 
+			{
+				foreach ($rowData['Seats']['Seat'] as $seat) 
+				{
+					if ($seat['Position']['ColumnIndex'] == $colIdx) 
+					{
+						$col = $seat;
+						$col['SeatData'] = $phyName . $seat['Id'];
+						$col['PhysicalName'] = $phyName;
+						$col['AreaCategoryCode'] = $areaCategoryCode;
+						$col['Description'] = $description;
+					}
+				} 
+			}
+
+			$row[$colIdx] = $col;
+
+			if ($col['Status'] != "Blank") 
+			{
+				$numberOfSeats++;
+				if ($mostIndexSeat < $colIdx) 
+				{
+					$mostIndexSeat = $colIdx;
+				}
+				if ($leastIndexSeat == $colCount) 
+				{
+					$leastIndexSeat = $colIdx;
+				}
+			}
+		}
+
+		$allSeats[$rowIdx] = $row;
+
+		$seatsDesc[$rowIdx]['NumberOfSeats'] = $numberOfSeats;
+		$seatsDesc[$rowIdx]['LeastIndexSeat'] = $leastIndexSeat;
+		$seatsDesc[$rowIdx]['MostIndexSeat'] = $mostIndexSeat;
+
+		if ($phyName != "") 
+		{
+			$seatsDesc[$rowIdx]['PhysicalName'] = $phyName;
+		}
+	}
+}
+
+function compareSeatPackage($a, $b)
+{
+    if ($a['SeatsPerTicket'] == $b['SeatsPerTicket']) 
+    {
+        return 0;
+    }
+    return ($a['SeatsPerTicket'] < $b['SeatsPerTicket']) ? 1 : -1;
+}
+
+usort($userTickets, 'compareSeatPackage');
+
+$assignedSeats = $allSeats;
+$seatsWillSelected = array(); 
+
+//echo "------------------------------------------------<br>";
+
+foreach ($assignedSeats as $idxRow => $eachRow) 
+{
+	foreach ($eachRow as $idxSeat => $eachSeat) 
+	{
+		if ($allSeats[$idxRow][$idxSeat]['Status'] == "Reserved") 
+		{
+			$seatsWillSelected[] = $allSeats[$idxRow][$idxSeat];
+		}
+
+		if ($assignedSeats[$idxRow][$idxSeat]['Status'] == "Empty") 
+		{
+			$seatAreaNumber = $eachSeat['Position']['AreaNumber'];
+			$seatAreaCatCode = $eachSeat['AreaCategoryCode'];
+			$numSeatsInGroup = 0;
+			$numSeatsAvailable = 0;
+			$isEmptyGroup = true;
+
+			if (array_key_exists('SeatsInGroup', $eachSeat)) 
+			{
+				if (array_values($eachSeat['SeatsInGroup']['SeatPosition']) === $eachSeat['SeatsInGroup']['SeatPosition']) 
+				{
+					$numSeatsInGroup = sizeof($eachSeat['SeatsInGroup']['SeatPosition']);
+					$numSeatsAvailable = $numSeatsInGroup;
+
+					foreach ($eachSeat['SeatsInGroup']['SeatPosition'] as $eachSeatGroup) 
+					{
+						if ($assignedSeats[$eachSeatGroup['RowIndex']][$eachSeatGroup['ColumnIndex']]['Status'] != "Empty")
+						{
+							$isEmptyGroup = false;
+							$numSeatsAvailable--;
+						}
+					}
+				}
+				else
+				{
+					$numSeatsInGroup = 1;
+					$numSeatsAvailable = 1;
+				}
+			}
+			
+			$isSingleSeatDone = true;
+
+			foreach ($userTickets as $idx => $eachTicket) 
+			{
+				if (($eachTicket['SeatsPerTicket'] == 1) && ($eachTicket['SeatsLeft'] > 0) && ($eachTicket['AreaCatCode'] == '0000000001')) 
+				{
+					//$isSingleSeatDone = false;
+				}
+			}
+			
+			foreach ($userTickets as $idx => $eachTicket) 
+			{
+				if ($eachTicket['AreaCatCode'] == $seatAreaCatCode && $eachTicket['SeatsLeft'] > 0) 
+				{
+					if (($eachTicket['SeatsPerTicket'] > 1) && ($eachTicket['SeatsPerTicket'] == $numSeatsInGroup) && ($isEmptyGroup == true) && ($isSingleSeatDone == true)) 
+					{
+						foreach ($eachSeat['SeatsInGroup']['SeatPosition'] as $eachSeatGroup) 
+						{
+							$seatsWillSelected[] = $assignedSeats[$eachSeatGroup['RowIndex']][$eachSeatGroup['ColumnIndex']];
+							$assignedSeats[$eachSeatGroup['RowIndex']][$eachSeatGroup['ColumnIndex']]['Status'] = "Reserved";
+						}
+						$userTickets[$idx]['Qty'] = $userTickets[$idx]['Qty'] - 1;
+						$userTickets[$idx]['SeatsLeft'] = $userTickets[$idx]['SeatsLeft'] - $numSeatsInGroup;
+
+						break;
+					}
+					elseif ($eachTicket['SeatsPerTicket'] == 1) 
+					{
+						$seatsWillSelected[] = $assignedSeats[$idxRow][$idxSeat];
+						$assignedSeats[$idxRow][$idxSeat]['Status'] = "Reserved";
+
+						$userTickets[$idx]['Qty'] = $userTickets[$idx]['Qty'] - 1;
+						$userTickets[$idx]['SeatsLeft'] = $userTickets[$idx]['SeatsLeft'] - 1;
+
+						break;
+					}
+				}
+			}
+		}
+	}
+} 
+
+//******** ******** SetSelectedSeats Below **************** ********  
+ 
+if (sizeof($seatsWillSelected) > 0) 
+{
+	$selectedSeats = array();
+
+	foreach ($seatsWillSelected as $seat) 
+	{
+		$selectedSeats['SelectedSeat'][] = array(	'AreaCategoryCode'	=> $seat['AreaCategoryCode'],
+													'AreaNumber'		=> $seat['Position']['AreaNumber'],
+													'RowIndex'			=> $seat['Position']['RowIndex'],
+													'ColumnIndex'		=> $seat['Position']['ColumnIndex']);
+	}
+
+	$params = array(	'OptionalClientClass'			=> "WWW",
+						'OptionalClientId' 				=> "111.111.111.112", 
+						'OptionalClientName'			=> "WEB",
+						'CinemaId'						=> "0000008001",
+						'SessionId'						=> $sessID,
+						'UserSessionId'					=> $userSessionID,
+						'ReturnOrder'					=> true,
+						'SelectedSeats'					=> $selectedSeats);
+
+	$result = $client->__soapCall('SetSelectedSeats', array($params));
+ 
+	$setSeatResult = $result->Result;
+	$setSeatRequest = json_encode($params);
+	$setSeatResponse = json_encode($result->Order->Sessions->Session->Tickets->Ticket);
+	
+	//****	Update Update Log	*****
+  	$dataTblLog =  DB::table($logTable)
+						  ->where('user_session_id' , $userSessionID) 
+						  ->pluck('soap_process'); 			 
+	$SOAPprocess = $dataTblLog.', SetSelectedSeats';
+  
+ 	 DB::table($logTable)
+			->where('user_session_id', $userSessionID)
+			->update(array('soap_process'			=> $SOAPprocess,
+						   'status' 					=> $setSeatResult,  
+						   'setselectedseat_status' 	=> $setSeatResult,
+						   'setselectedseat_request' 	=> $setSeatRequest, 
+						   'setselectedseat_response'	=> $setSeatResponse));  
+	//******* End Update Log	*****
+
+	if ($result->Result == "OK") 
+	{
+		unset($allSeats);
+		$allSeats = $assignedSeats;
+
+		unset($ticketList);
+		$ticketList = array();
+
+		unset($ticketName);
+		$ticketName = array();
+		
+		unset($ticketPrice);
+		$ticketPrice = array();
+
+		$bestSeats = $result->Order->Sessions->Session->Tickets->Ticket;
+
+		if (sizeof($bestSeats) > 1) 
+		{
+			foreach ($bestSeats as $bestSeat) 
+			{
+				if (strlen($bestSeat->SeatData) > 0) 
+				{
+					$ticketList[] = $bestSeat->SeatData;
+					$ticketName[] = $bestSeat->Description;
+					$ticketPrice[] = $bestSeat->PriceCents;
+				}
+			}
+		}
+		else
+		{
+			$bestSeat = $bestSeats;
+
+			if (strlen($bestSeat->SeatData) > 0) 
+			{
+				$ticketList[] = $bestSeat->SeatData;
+				$ticketName[] = $bestSeat->Description;
+				$ticketPrice[] = $bestSeat->PriceCents;
+			}
+		}
+	}
+	else
+	{
+		//echo something;
+	}
+} 
+//************** Start Insert *********************** 
+//************** End Insert *****************************
+ $config_path = "http://www.embassycineplex.com";
+?>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta property="og:image" content="http://www.embassycineplex.com/images/share.jpg" />
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/css/reset.css">
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/css/font.css">
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/css/screenKiosk.css">
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/css/screen2.css">
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/css/screenInside.css">
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/css/screenTickets.css"> 
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/js/formValidator/css/validationEngine.jquery.css">
+<link media="all" type="text/css" rel="stylesheet" href="<?php echo $config_path; ?>/js/colorbox-master/example3/colorbox.css">
+<?php echo $__env->make('kiosk.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</head>
+<body>
+<div id="main"> <?php echo $__env->make('kiosk.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+  <div id="countdown" class="url"></div>
+  <div id="content" class="content-main">
+    <div class="titleMovie"> <a href="<?php echo URL::to("kiosk/selectTicket/$movieID/$sessID"); ?>"><img src="<?php echo asset('images/btn-back.png'); ?>"  alt="btn Back" class="hoverImg08"></a> </div>
+    <div class="contentPage"> <?php foreach($movie_DataDetail as $movie): ?>
+      <?php
+     	$movieName =	$movie->movie_Name_EN;  
+		$sessID = $movie->showtime_Session_strID;
+	 ?>
+      <div class="content-detail-movie">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="18%"><div class="rowShowTodayImage"><img src="<?php echo asset("uploads/movie/$movie->movie_Img_Thumb"); ?>" width="140" height="210"  alt="<?php echo $movieName; ?>"></div></td>
+            <td width="82%" align="left" valign="top"><h2 class="txtGold24"><?php echo $movieName; ?></h2>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="15%"><?php
+            	if($movie->movie_Rating == "ส."){ 
+					$imgRate = "rate_raise.png"; 
+				 }else if($movie->movie_Rating == "น13+"){ 
+					$imgRate = "rate_up_13_en.png";
+				 }else if($movie->movie_Rating == "น15+"){ 
+					$imgRate = "rate_up_15_en.png";
+				 }else if($movie->movie_Rating == "น18+"){ 
+					$imgRate = "rate_up_18_en.png";
+				  }else if($movie->movie_Rating == "ฉ20-"){ 
+					$imgRate = "rate_under_20_en.png";
+				  }else { 
+					$imgRate = "rate_general_en.png";
+				 }//***********
+				 
+				 if($movie->showtime_SystemType == "VS00000001"){ 
+					$imgSystem = "type_digital.png";
+					$systemName = '2D';
+				 }else if($movie->showtime_SystemType == "0000000001"){ 
+					$imgSystem = "type_3d.png";
+					$systemName = 'D3D';
+				 }  //*************
+			?>
+                    <p><img src="<?php echo asset("images/icon/$imgRate"); ?>" alt="<?php echo $movie->movie_Rating; ?>" style="padding:0; padding-right:5px;  max-width:40px"> <img src="<?php echo asset("images/icon/$imgSystem"); ?>" alt="<?php echo $systemName; ?>" style="max-width:40px"></p></td>
+                  <td width="85%" class="txtSoundTrack" style="padding-left:5px"><?php
+                   		$showtimes =  $movie->showtime_soundAttributes.";";
+						echo	 $showtimes = strstr($showtimes, ';', true); // As of PHP 5.3.0
+				   ?></td>
+                </tr>
+              </table>
+              <p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <table width="100%" border="0" cellspacing="1" cellpadding="1" class="detailTable">
+                <tr>
+                  <td width="33%">Date &nbsp;<span class="txtWhite18"><?php echo date('d F Y', strtotime($movie->showtime_dtmDate_Time)); ?></span></td>
+                  <td width="33%">Time &nbsp;<span class="txtWhite18"><?php echo date('H:i', strtotime($movie->showtime_dtmDate_Time))?></span></td>
+                  <td width="33%">Hall &nbsp;<span class="txtWhite18"><?php echo strReplaceText($movie->showtime_strName); ?></span></td>
+                </tr>
+              </table>
+              <p>&nbsp;</p></td>
+          </tr>
+        </table>
+      </div>
+      <?php endforeach; ?>
+      <div class="movie-step">
+        <p>&nbsp;</p>
+        <p><img src="../images/step_seat_type_2.png" width="900" ></p>
+      </div>
+      <div class="content-seat-type">
+        <p>&nbsp;</p
+          >
+        <p>&nbsp;</p
+          >
+        <p><img src="../images/12_theatre_3_07.png" width="900" height="153"></p>
+        <div style="width:900px; margin:auto; text-align:center;color: #f1e3c2;text-transform: uppercase;">
+          <?php 	   
+							   
+			  for ($idxRow = $rowCount-1; $idxRow >= 0; $idxRow--) 
+			  {
+				  echo "<table style='border-collapse: collapse;' class='seatTable '>";
+				  //echo "<table>";
+			  
+				  if ($seatsDesc[$idxRow]['NumberOfSeats'] > 0) 
+				  {
+					  echo "<tr>";
+			  
+					  if($seatsDesc[$idxRow]['MostIndexSeat'] == $colCount-1)
+					  {
+						  echo "<td style='padding:0px;'  class='tableSeatsLeft'>";
+						  echo "<img src='../images/theater/Blank.png'><br />";
+						  echo "<div style='text-align:center;'>" . $seatsDesc[$idxRow]['PhysicalName'] . "</div><br />";
+						  echo "</td>";
+					  }
+			  
+					  for ($idxCol = $colCount-1; $idxCol >= $seatsDesc[$idxRow]['LeastIndexSeat']-1; $idxCol--) 
+					  {
+						  $seatName = "";
+						  $areaNumber = 0;
+						  $styleRight = '';
+						  $styleLeft  = '';
+						  $styleStatus  = '';
+						  $seatName = "";
+						  $styleBlank = "";
+						  $imgSeatHover = '';
+						 $stylePointerCurser = ''; 
+			  
+						  if ($idxCol == $colCount-1 && $idxCol > $seatsDesc[$idxRow]['MostIndexSeat'])
+						  {
+							  $seatName = $seatsDesc[$idxRow]['PhysicalName'];
+							  $styleLeft = "tableSeatsLeft";
+						  }
+			  
+						  if ($idxCol == $seatsDesc[$idxRow]['LeastIndexSeat']-1)
+						  {
+							  $seatName = $seatsDesc[$idxRow]['PhysicalName'];
+							  $styleRight = "tableSeatsRight";
+						  }
+			  
+						  if ($allSeats[$idxRow][$idxCol]['Status'] == "Blank") 
+						  {
+							  $imgName = "../images/theater/Blank";
+						  }
+						  else
+						  {
+							  $imgName = "../images/theater/". ((($allSeats[$idxRow][$idxCol]['Description'] == "Grand Sofa") && ($allSeats[$idxRow][$idxCol]['PhysicalName'] == "A")) ? "A_" : "") . 
+							  str_replace(' ', '_', $allSeats[$idxRow][$idxCol]['Description']) . "_" . 
+							  $allSeats[$idxRow][$idxCol]['Status'] . "_" . 
+							  $allSeats[$idxRow][$idxCol]['SeatStyle'];
+							  
+					/*		  $imgName = "img/" . ((($allSeats[$idxRow][$idxCol]['Description'] == "Grand Sofa") && ($allSeats[$idxRow][$idxCol]['PhysicalName'] == "A")) ? "A_" : "") .
+				str_replace(' ', '_', $allSeats[$idxRow][$idxCol]['Description']) . "_" . 
+				$allSeats[$idxRow][$idxCol]['Status'] . "_" . 
+				$allSeats[$idxRow][$idxCol]['SeatStyle'];*/ 
+			  
+							  $seatName = $allSeats[$idxRow][$idxCol]['SeatData'];
+							  $areaNumber = $allSeats[$idxRow][$idxCol]['Position']['AreaNumber']; 
+							  $stylePointerCurser = "seatSelect";
+							  
+							  $NamePicSeat = str_replace(' ', '_', $allSeats[$idxRow][$idxCol]['Description']);
+							  $styleBlank = "imgSeat";
+							  $imgSeatHover = "<img src=../images/theater/imgMouseOver/$NamePicSeat.jpg>";	
+						  }
+			  
+						  $tdID = "_area" . $areaNumber . "row" . $idxRow . "col" . $idxCol;
+			  				if($allSeats[$idxRow][$idxCol]['Status'] == "Sold"){
+									 $styleStatus = "statusSold";
+								}#end if
+								
+						  echo "<td style='padding:0px;' id='" . $tdID . "''  class='".$styleRight."".$stylePointerCurser." ".$styleLeft." ".$styleStatus."' >";
+						//  echo "<img src='" . $imgName . ".png'><br />";
+						  echo "<p class='".$styleBlank."' ><img src='" . $imgName . ".png'><p>";  
+						  echo "<div style='text-align:center;'>" . $seatName . "</div><br />";
+						  echo "</td>";
+					  }
+					  echo "</tr>";
+				  }
+				  echo "</table>";
+			  }
+			  
+			  echo "<div id='seatChanged'></div>";
+            ?>
+        </div>
+        <p class="clear"></p>
+      </div>
+      <table width="100%" border="0" cellspacing="1" cellpadding="1" class="detailTable" id="detailPaymentTicket">
+      </table>
+      <?php if ($numSeatType > 1){?>
+      <br>
+      <div class="total-price">Total Price <span style="font-size:22px" class="txtWhite20">
+        <?php
+		 	 $priceTotal	 = 	substr("$priceTotal", 0, -2); 
+		    echo number_format($priceTotal)?>
+        Baht</span></div>
+      <?php }else{#end if
+		     $priceTotal	 = 	substr("$priceTotal", 0, -2);
+		   }#?>
+      <div class="content-seat-type">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="47%" valign="top"><p>&nbsp;</p>
+              <p>&nbsp;</p>
+              <p style="text-align:center"><img src="../images/txt_confirm_booking.png" width="367" height="22"></p>
+              <?php
+		 	 $cname = '';
+			 $email = '';
+			 $mobile = '';
+			 $checkRememberMe = '';
+			 
+          	if (isset($_COOKIE["cname"]) && isset($_COOKIE["email"]) && isset($_COOKIE["mobile"])){
+				$cname = $_COOKIE["cname"];
+				$email = $_COOKIE["email"];
+				$mobile = $_COOKIE["mobile"];
+				$checkRememberMe = 'Y';
+			}#endif
+		  ?>
+              <form action="<?php echo URL::to("kiosk/submitReserve"); ?>" method="post" class="formPayment">
+                <div style="width:336px; margin:auto">
+                  <p>
+                    <label for="cname" class="txtBrown18_2">Your Name</label>
+                    <br />
+                    <input type="text" name="cname" value="<?php echo $cname; ?>" id="cname" class="validate[required]  txtBrown18_2 cName" autocomplete="off">
+                  </p>
+                  <p>
+                    <label for="email" class="txtBrown18_2">Your E-mail</label>
+                    <br />
+                    <input type="text" name="email" value="<?php echo $email; ?>" id="email" class="validate[required,custom[email]] cEmails txtBrown18_2" autocomplete="off">
+                  </p>
+                  <p>
+                    <label for="mobile" class="txtBrown18_2">Mobile No.</label>
+                    <br />
+                    <input type="text" name="mobile" value="<?php echo $mobile; ?>" id="mobile" class="validate[required,maxSize[10],minSize[9],custom[integer]]  txtBrown18_2 cMobile" autocomplete="off">
+                  </p>
+                
+                </div>
+                <input name="url" type="text" class="url">
+                <table width="100%">
+                  <tr>
+                    <td align="center" ><?php $dateBooking = date('Y-m-d H:i', strtotime(" +60 minutes")); 
+						if($dateBooking < $movie->showtime_dtmDate_Time){ 
+					?><input type="image" src="<?php echo asset("images/btn-confirm-booking.png"); ?>" class="buttonBack hoverImg08" id="bookingConfirm"><?php 	}else{?>
+                      <span id="reserveNo"><a  href="#" title="Please make reservations at least 60 minutes before showtime" class="tooltip btnNoBooking"><img src="<?php echo asset("images/btn_reserve_no.png"); ?>" alt="no reserve" class="buttonBackNo"  ></a></span>
+                      <?php }?></td>
+                  </tr>
+                </table>
+                <div style="text-align:center; padding:10px; display:none " class="loading">
+                  <p class="txtWhite18">Processing ...</p>
+                <img src="<?php echo asset("images/loading.gif"); ?>" alt="<?php echo $movie->movie_Rating; ?>"   > </div>
+            	<input name="userSessionID" type="hidden" value="<?php echo $userSessionID; ?>" id="userSessionID">
+                <input name="valueInCents" type="hidden" value="<?php echo $valueInCents; ?>">
+                <input name="movieID" type="hidden" value="<?php echo $movieID; ?>">
+                <input name="sessID" type="hidden" value="<?php echo $sessID; ?>">
+                <input name="seatPosition" type="hidden" class="seatPosition">
+                <input name="seatsFromSeatTable" type="hidden" class="selectedSeats">
+              
+                <input type="hidden" name="transaction_type" size="25" value="sale">
+                <input type="hidden" name="bill_to_address_country" size="60" value="TH">
+                <input type="hidden" name="currency" size="25" value="THB">
+                <input type="hidden" name="reference_number" size="40" value="<?php echo $userSessionID; ?>">
+                <input type="hidden" name="amount" size="25" value="<?php echo $priceTotal; ?>">
+                <input type="hidden" name="signed_date_time" value="<?php echo gmdate("Y-m-d\TH:i:s\Z"); ?>">
+                <input type="hidden" name="locale" value="en">
+                <input name="website" type="text" class="url">
+                <input name="theatreName" type="hidden" value="<?php echo $movie->showtime_strName; ?>">
+                <input name="timeShowing" type="hidden" value="<?php echo $movie->showtime_dtmDate_Time; ?>">
+                <input name="movieName" type="hidden" value="<?php echo $movieName; ?>">  
+              </form>
+              <br>
+              <br>
+              <br>
+              <br>
+              <?php //////////////////////// Payment ////////////////////////////?>
+            </td>
+          </tr>
+        </table>
+        <p class="clear"></p>
+      </div>
+      <br>
+      <br>
+      <div class="content-next clear" id="prevBTN"> <a href="<?php echo URL::to("kiosk/selectTicket/$movieID/$sessID"); ?>"><img src="../images/btn_seat_prev.png" width="120" height="46" class="hoverImg08"></a> &nbsp; &nbsp; &nbsp; </div>
+    </div>
+  </div>
+    <div class="url">
+     <div id='inline_content' style='padding:30px; background:#fff;text-align:center;'>
+       <p  class="txtBlack20 fontSynopis"><strong>Please make reservations at least 60 minutes before showtime</strong></p> 
+       </div>
+   </div>
+  <?php echo $__env->make('kiosk.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></div>
+<?php echo $__env->make('kiosk.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo HTML::script('js/InFieldLabels/jquery.infieldlabel.min.js'); ?>
+<?php echo HTML::script('js/formValidator/js/languages/jquery.validationEngine-en.js'); ?>
+<?php echo HTML::script('js/formValidator/js/jquery.validationEngine.js'); ?>
+<?php echo HTML::script('js/colorbox-master/jquery.colorbox.js'); ?>
+<script type="text/javascript" >
+jQuery(function(){
+   jQuery("label").inFieldLabels();   
+	jQuery('.buttonBackNo').bind('click', false);  
+	
+    var cname = jQuery('#cname').val();	
+   	jQuery('#bill_to_forename').val(cname);
+	jQuery('#bill_to_surname').val(cname);
+	
+	
+	 var email = jQuery('#email').val();	
+   	jQuery('#bill_to_email').val(email);
+	
+	 var mobile = jQuery('#mobile').val();	
+   	jQuery('#bill_to_phone').val(mobile);
+	
+   jQuery( "#cname" ).keyup(function( event ) {
+	 	var cname = jQuery(this).val();		
+	  	jQuery('#bill_to_forename').val(cname)	   ;
+		jQuery('#bill_to_surname').val(cname)	 ;  
+	 });
+	 
+	  jQuery( "#email" ).keyup(function( event ) {
+	 	var email = jQuery(this).val();		
+	  	jQuery('#bill_to_email').val(email)	   
+	 });
+	 
+	   jQuery( "#mobile" ).keyup(function( event ) {
+	 	var mobile = jQuery(this).val();		
+	  	jQuery('#bill_to_phone').val(mobile)	   
+	 });
+	 
+    jQuery(".formPayment").validationEngine('attach', {
+		 
+		  onValidationComplete: function(form, valid){
+            if (valid) { 
+                jQuery('#bookingConfirm, #prevBTN, #payment').hide(); 
+				jQuery('.loading').fadeIn();
+                form.validationEngine('submit');
+            }
+        }		 
+	}); 
+   
+	jQuery('a').click(function (e) {
+		  e.preventDefault();                   // prevent default anchor behavior
+		  var goTo = this.getAttribute("href"); // store anchor href 
+		 //** 
+		   var var1 = jQuery('#userSessionID').val(); 
+		   var var2 = jQuery('.url').val(); 
+			jQuery.ajax({
+				url : '<?php echo URL::to("cancelTicket"); ?>', 
+					type:"GET", cache: false, data : "var1="+var1+"&var2="+var2,	  	
+					success :function(data){ 
+				 }
+			});   
+		  setTimeout(function(){
+			   window.location = goTo;
+		  },500);       
+	  });  
+	   jQuery('#countdown').timeTo({
+            seconds: 10,
+            displayHours: false
+		  }, function(){
+			  var var1 = jQuery('#userSessionID').val(); 
+		   	  var var2 = jQuery('.url').val();
+			  
+			  jQuery.ajax({
+				url : '<?php echo URL::to("cancelTicket"); ?>', 
+					type:"GET", cache: false, data : "var1="+var1+"&var2="+var2,	  	
+					success :function(data){ 
+					alert('Your session has expired Please try again'); 
+					window.location = '<?php echo URL::to("selectTicket/$movieID/$sessID"); ?>'; 
+				 }
+			});   
+		  });
+}); 
+</script> 
+<script>
+<?php
+	//****************
+echo "var allSeats = JSON.parse('" . json_encode($allSeats) . "');";
+echo "var reservedSeats = [];";
+echo "var ticketList = [];";
+echo "var ticketName = [];";
+echo "var ticketPrice = [];";
+
+if (sizeof($seatsWillSelected) > 0) 
+{
+	echo "reservedSeats = JSON.parse('" . json_encode($seatsWillSelected) . "');";
+	echo "ticketList = JSON.parse('" . json_encode($ticketList) . "');";
+	echo "ticketName = JSON.parse('" . json_encode($ticketName) . "');";
+	echo "ticketPrice = JSON.parse('" . json_encode($ticketPrice) . "');";
+}
+?> 
+</script> 
+<?php echo HTML::script('js/javascript.js'); ?>
+</body>
+</html>

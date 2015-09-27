@@ -1,0 +1,34 @@
+<?php $__env->startSection('content'); ?>
+ssssssss
+<?php $__env->stopSection(); ?>
+
+//******************
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Backoffice' Central embassy</title>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('js/bootstrap/css/bootstrap.css'); ?>
+<?php echo HTML::style('js/bootstrap/css/bootstrap-theme.css'); ?>
+<?php echo HTML::style('css/css-bof.css'); ?>
+<?php echo HTML::style('js/accordion/style.css'); ?>
+<?php echo HTML::style('js/formValidator/css/validationEngine.jquery.css'); ?>
+<?php echo $__env->make('layout.incBofHeaderTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</head>
+<body>
+<div id="main">  
+ <form action="signin" method="post" class="form-signin" id="login">
+       
+         <div class="login-alert margin-fot-10">Invalid username or password</div>
+         <input name="giFormUsername" type="text" autofocus   class="form-control margin-fot-10" id="username" placeholder="Username">
+         <input name="giFormPassword" type="password" class="form-control margin-fot-10" id="password" placeholder="Password" >
+         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+           <input type="hidden" name="action" value="login">
+         </form>
+  <p class="clear"></p>  
+</div>
+
+</body>
+</html>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

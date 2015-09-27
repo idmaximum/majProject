@@ -1,0 +1,138 @@
+<?php
+	$logTable = "log_vistaws_" . date('Y_m');
+	$paymentRespon = json_encode($dataResult);
+	$userSessionID = $dataResult['req_reference_number'];
+	$valueInCents = $dataResult['req_amount'].'00';
+	
+	$email 		= $dataResult['req_bill_to_email'];
+	$mobile 	= $dataResult['req_bill_to_phone'];
+	$cname		= $dataResult['req_bill_to_forename'];
+	
+	$paymentResult = '';
+	
+	 // $wsdl = "http://10.121.130.25/WSVistaWebClient/TicketingService.asmx?WSDL"; 
+	$wsdl = "http://10.100.101.146/WSVistaWebClient/TicketingService.asmx?WSDL";  
+	
+	$client = new SoapClient($wsdl, array('trace' => true)); 
+	
+	$paymentInfo = array(	'PaymentValueCents'			=> $valueInCents,
+						'BillFullOutstandingAmount'	=> false,
+						'UseAsBookingRef'			=> false,
+						'PaymentStatus'				=> "Y",
+						'BillingValueCents'			=> $valueInCents,
+						'CardBalance'				=> 0,
+						'SaveCardToWallet'			=> false);
+
+	$paymentInfoCollection = array();
+	
+	$paymentInfoCollection['PaymentInfo'][] = array(	'CardNumber'				=> "1234567890",
+														'CardType'					=> "Credit",
+														'PaymentValueCents'			=> $valueInCents,
+														'PaymentTenderCategory'		=> "CREDIT",
+														'BillFullOutstandingAmount'	=> false,
+														'UseAsBookingRef'			=> false,
+														'PaymentStatus'				=> "Y",
+														'BillingValueCents'			=> $valueInCents,
+														'CardBalance'				=> 0,
+														'BankReference'				=> "7778888",
+														'SaveCardToWallet'			=> false);
+	
+	$passTypeRequest = array(	'IncludeApplePassBook'	=> false,
+								'IncludeICal'			=> false);
+	
+	$params = array(	'OptionalClientClass'					=> "WWW",
+						'OptionalClientId' 						=> "111.111.111.112", 
+						'OptionalClientName'					=> "WEB",
+						'UserSessionId'							=> $userSessionID,
+						'PaymentInfo'							=> $paymentInfo,
+						'PaymentInfoCollection'					=> $paymentInfoCollection,
+						'PerformPayment'						=> false,
+						'CustomerEmail'							=> "$email",
+						'CustomerPhone'							=> "$mobile",
+						'CustomerName'							=> "$cname",
+						'GeneratePrintStream'					=> false,
+						'ReturnPrintStream' 					=> true,
+						'UnpaidBooking'							=> true,
+						'PrintTemplateName'						=> "INTERMEC-PF8T",
+						'OptionalReturnMemberBalances'			=> false,
+						'BookingMode'							=> 0,
+						'PrintStreamType'						=> null,
+						'GenerateConcessionVoucherPrintStream'	=> false,
+						'PassTypesRequestedForOrder'			=> $passTypeRequest,
+						'UseAlternateLanguage'					=> false);
+	 
+	$result = $client->__soapCall('CompleteOrder', array($params));
+	$pincode =  $result->VistaBookingNumber; 
+	
+	$paymentResult = $result->Result;
+	
+	$completeOrderData = json_decode(json_encode($result), true);
+	unset($completeOrderData['PrintStream']);
+	unset($completeOrderData['PrintStreamCollection']); 
+	
+	$CompleteOrderRequest = json_encode($params);
+	$CompleteOrderResponse = json_encode($completeOrderData); 
+	if($paymentResult == 'UnexpectedError' && $paymentResult == ''){
+		
+		return Redirect::to('paymentError');
+		exit(); 
+	}else{
+		
+		$transaction_ref_no		= $dataResult['bill_trans_ref_no'];
+		$reason_code		= $dataResult['reason_code'];
+		$decision		= $dataResult['decision'];
+		
+		
+			$dataTblLog =  DB::table($logTable)
+						  ->where('user_session_id' , $userSessionID) 
+						  ->pluck('soap_process'); 			 
+	$SOAPprocess = $dataTblLog.', CompleteOrder';
+  
+ 	 DB::table($logTable)
+			->where('user_session_id', $userSessionID)
+			->update(array('soap_process'			=> $SOAPprocess,  
+							'order_payment' 	=> 'PAYMENT',
+							'order_status' 	=> 'YES', 
+							'status' 					=> $paymentResult, 							
+						 	'completeorder_status' 	=> $paymentResult,  
+							
+							'transaction_ref_no' 	=> $transaction_ref_no,  
+							'decision' 	=> $decision,  
+							'reason_code' 	=> $reason_code,  
+							'payment_response' 	=> $paymentRespon,  
+							 
+						    'completeorder_request' 	=> $CompleteOrderRequest,  
+						    'completeorder_response'	=> $CompleteOrderResponse));  
+		
+		}#end if
+	
+	
+	
+
+?><!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta property="og:image" content="http://www.embassycineplex.com/images/share.jpg" />
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?>
+<?php echo HTML::style('css/screenInside.css'); ?>
+<?php echo HTML::style('css/infomation.css'); ?>
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo $__env->make('frontend.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</head>
+<body> 
+<div id="main">
+  <?php echo $__env->make('frontend.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+   	 <div id="content" class="content-main"> 
+   			Success    <?php  echo $dataResult['req_reference_number'];?>  
+    </div> 
+  <?php echo $__env->make('frontend.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div> 
+<?php echo $__env->make('frontend.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</body>
+</html>

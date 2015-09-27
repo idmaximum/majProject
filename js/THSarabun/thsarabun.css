@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'THSarabunPSKRegular';
+    src: url('thsarabun.eot');
+    src: url('thsarabun.eot') format('embedded-opentype'),
+         url('thsarabun.woff') format('woff'),
+         url('thsarabun.ttf') format('truetype'),
+         url('thsarabun.svg#THSarabunPSKRegular') format('svg');
+}

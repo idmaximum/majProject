@@ -1,0 +1,79 @@
+<?php $__env->startSection('content'); ?>
+<ul class="breadcrumbs">
+  <li><a href="movie#theater">Home &gt;<i class="iconfa-home"></i></a> <span class="separator"></span></li>
+  <li>ผู้ดูแล / STAFF</li>
+</ul>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="70%"><h1 class="pagetitle">ผู้ดูแล / STAFF</h1></td>
+    <td width="30%" class="text-center"> </td>
+  </tr>
+</table>
+<p class="line-brown"></p>
+<div class="detail-page">
+  <form action="" method="post">
+     <form action="news" method="post">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><table width="100%" border="0" cellspacing="4" cellpadding="0">
+            <tr>
+              <td width="71%" align="left"><a class="btn btn-success" href="<?php echo URL::to('backoffice_management/staffadd#admin'); ?>">เพิ่ม | Add New</a></td>
+              <td width="18%" align="left">
+              <select name="action_up" class="form-control"id="action_up" style="float:right">
+                  <option value="" selected="selected">-เลือก-</option>
+                  <option value="เผยแพร่ | Publish">เผยแพร่ | Publish</option>
+                  <option value="ซ่อน | Unpublish">ซ่อน | Unpublish</option>
+                  <option value="ลบ | Delete">ลบ | Delete</option>
+                </select></td>
+              <td width="11%" align="left"><input type="submit" name="submit" value="Apply" class="btn btn-primary" style="margin-left:5px" /></td>
+            </tr>
+          </table></td>
+      </tr>
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0"  class="table table-striped">
+            <thead>
+              <tr align="center">
+                <td width="31%"><strong>Username</strong></td>
+                <td width="25%"><strong> Username</strong></td>
+                <td width="13%"><strong>วันที่สร้าง/
+                  วันที่แก้ไข</strong></td>
+                <td width="10%"><strong>Level</strong></td>
+                <td width="12%"><strong>Edit</strong></td>
+                <td width="9%"><strong>Func.</strong></td>
+              </tr>
+            </thead>
+            <tbody> 
+            <?php foreach($DBStaff as $row): ?>
+            <tr>
+              <td><?php echo $row->staff_username; ?></td>
+              <td align="center">
+              <?php echo $row->staff_username; ?>
+              </td>
+              <td align="center"><?php echo date("d F Y", strtotime($row->created_at)); ?></td>
+              <td align="center">  
+              <?php if($row->staff_level == '1'): ?>
+              Staff
+              <?php else: ?>
+           	   <em>Admin</em> 
+               <?php endif; ?></td>
+              <td align="center"><a href="staff/<?php echo $row->staff_ID; ?>"><img src="<?php echo asset('images/png/glyphicons_030_pencil.png'); ?>" width="20" height="20" /></a></td>
+              <td align="center">
+              <label class="checkbox-inline">
+                  <input type="checkbox"   name="staffID[]"  value="<?php echo $row->staff_ID; ?>">
+                </label></td>
+            </tr>
+            <?php endforeach; ?>
+              </tbody>
+            
+          </table></td>
+      </tr>
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+  </form>
+  </form>
+</div>
+<p class="line-brown clear"></p>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

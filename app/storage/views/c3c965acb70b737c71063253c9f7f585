@@ -1,0 +1,199 @@
+<?php foreach($movie_lists_detail as $movie): ?>
+<?php 
+	 $movieName =	$movie->movie_Name_TH;
+	 $nameMovieSub =  str_replace_text($movieName); 
+?>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title><?php echo $movieName; ?></title> 
+<meta property="og:image" content="<?php echo asset("uploads/movie/$movie->movie_Img_Thumb"); ?>" />
+<meta name="description" content="<?php echo $movie->movie_Synopsis_TH; ?>">
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?>
+<?php echo HTML::style('css/screenInside.css'); ?>
+<?php echo HTML::style('css/screenMovieDetail.css'); ?>
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo HTML::style('js/tooltipster/css/tooltipster.css'); ?>
+<?php echo HTML::style('js/colorbox-master/example3/colorbox.css'); ?>
+<?php echo HTML::style('css/screenTH.css'); ?>
+<?php echo $__env->make('frontendTH.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php 
+	 $dateNow = date('Y-m-d 06:00');
+	 $dateHrNow = date('Y-m-d H:i:s'); 
+?>
+</head><body>
+<div id="main"> <?php echo $__env->make('frontendTH.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+ 
+  <div id="content" class="content-main">
+    <div class="contentPage">
+      <div class="titleMovie">
+        <div class="content-movie-left" style="padding-top:10px"><a href="<?php echo URL::to('advancebooking'); ?>"><img src="<?php echo asset('images/6_movie_detail_09.png'); ?>" width="88" height="20" class="hoverImg08"></a></div>
+        <div class="content-movie-right">
+          <h1 class="fontTHLang titleMovieName txtGold36"><?php echo $movie->movie_Name_TH; ?></h1>
+          <span class="txtBrown24" style="float:right"><span style=" bottom:10px; position:relative; ">Share</span> 
+           <a href="http://www.facebook.com/sharer.php?u=http://www.embassycineplex.com/movie/<?php echo $movie->movieID; ?>/<?php echo $nameMovieSub; ?>&t=<?php echo $movieName; ?>" target="_blank"><img src="<?php echo asset('images/ic-fb-share.png'); ?> " width="34" height="30" class="hoverImg08" ></a> 
+          <a href="http://twitter.com/home?status=<?php echo $movieName; ?> http://www.embassycineplex.com/movie/<?php echo $movie->movieID; ?>/<?php echo $nameMovieSub; ?>&t=<?php echo $movieName; ?>" target="_blank"><img src="<?php echo asset('images/ic-tw-share.png'); ?>" width="32" height="30" class="hoverImg08"></a></span></div>
+        <p class="clear"></p>
+      </div>
+      <div class="detailMovie">
+        <div class="content-movie-left">
+          <p><img src="<?php echo asset("uploads/movie/$movie->movie_Img_Thumb"); ?>" width="230" height="340"></p>
+          <div style="padding-left:8px">
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p class="txtBrown20_2">Release Date</p>
+            <p style="padding:3px;"></p>
+            <p class="txtWhite20"><?php echo date("d F Y", strtotime($movie->movie_ReleaseDate)); ?></p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <?php if($movie->movie_Duration != '0'): ?>
+            <p class="txtBrown20_2">Duration</p>
+            <p style="padding:3px;"></p>
+            <p class="txtWhite20"><?php echo $movie->movie_Duration; ?> Min</p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <?php endif; ?>
+            <?php if($movie->movie_Categories != ''): ?>
+            <p class="txtBrown20_2">Genres</p>
+            <p style="padding:3px;"></p>
+            <p class="txtWhite20 fontTHLang"><?php echo $movie->movie_Categories; ?></p>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <?php endif; ?>
+            <?php if($movie->movie_Directors != ''): ?>
+            <p class="txtBrown20_2">Director</p>
+            <p style="padding:3px;"></p>
+            <p class="txtWhite20 fontTHLang"><?php echo $movie->movie_Directors; ?></p>
+            <?php endif; ?>  
+            <?php if($movie->movie_Actors != ''): ?>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p class="txtBrown20_2">Actor</p>
+            <p style="padding:3px;"></p>
+            <p class="txtWhite20 fontTHLang"><?php echo $movie->movie_Actors; ?></p>
+            <?php endif; ?>
+            <p>&nbsp;</p>
+            <p>&nbsp;</p>
+            <p class="txtBrown20_2">Rate</p>
+            <p style="padding:3px;"></p>
+            <?php
+            	if($movie->movie_Rating == "ส."){ 
+					$imgRate = "rate_raise.png";
+				 }else if($movie->movie_Rating == "ทป."){ 
+					$imgRate = "rate_general.png";
+				 }else if($movie->movie_Rating == "น13+"){ 
+					$imgRate = "rate_up_13.png";
+				 }else if($movie->movie_Rating == "น15+"){ 
+					$imgRate = "rate_up_15.png";
+				 }else if($movie->movie_Rating == "น18+"){ 
+					$imgRate = "rate_up_18.png";
+				  }else if($movie->movie_Rating == "ฉ20-"){ 
+					$imgRate = "rate_under_20.png";
+				 }else{
+						$imgRate = "rate_general.png";
+				 }
+			?>
+            <p ><img src="<?php echo asset("images/icon/$imgRate"); ?>" alt="<?php echo $movie->movie_Rating; ?>" style="padding:0; max-width:55px"></p>
+          </div>
+        </div>
+        <div class="content-movie-right">
+          <?php   $item_youtube = substr($movie->movie_Youtube,-11,11); ?>
+          <iframe width="732" height="350" src="//www.youtube.com/embed/<?php echo $item_youtube; ?>?autoplay=1" frameborder="0" allowfullscreen></iframe>
+          <p class="titleDetail clear" style="height:1px"></p>
+          <p style="height:30px">&nbsp;</p>
+          <div class="contentShowtimeMovie"><?php foreach($movie_lists as $rowMovieShowTime): ?>
+            <?php if($movie->movie_strID  == $rowMovieShowTime->showtime_Movie_strID ): ?>
+            <div class="rowSystemMovie">
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td width="22%" valign="top" class="txtBrown20_2"><br/>
+                    <span style=" bottom:10px; position:relative; padding-right:10px; ">System Type</span><br/>
+                    <?php
+            if($rowMovieShowTime->showtime_SystemType == "VS00000001"){ 
+					$imgSystem = "type_digital.png";
+					$systemName = '2D';
+				 }else if($rowMovieShowTime->showtime_SystemType == "0000000001"){ 
+					$imgSystem = "type_3d.png";
+					$systemName = 'D3D';
+				 } 
+			?><img src="<?php echo asset("images/icon/$imgSystem"); ?>" alt="<?php echo $systemName; ?>"></td>
+                  <td width="78%" align="right" style="padding-top:10px"><?php	$numKL = 1;
+					  $dayTimeNight = date('Y-m-d 03:00', strtotime("$dateNow +1 day")); 
+					  ?>
+                    <?php foreach($movie_showtimes  as $movieShowtime): ?>
+                    <?php if($rowMovieShowTime->movie_strID === $movieShowtime->showtime_Movie_strID && $rowMovieShowTime->showtime_SystemType == $movieShowtime->showtime_SystemType): ?> 
+                    <?php if( date('Y-m-d H:i', strtotime($movieShowtime->showtime_dtmDate_Time)) >= $dateNow &&   date('Y-m-d H:i', strtotime($movieShowtime->showtime_dtmDate_Time)) <= $dayTimeNight): ?> <?php
+					  $style45Mins = '';
+					  $urlPage = '';
+					 if("$movieShowtime->showtime_dtmDate_Time" < "$dateHrNow"){
+						   $classTime = "timeAgo";
+						   $urlPage = '';
+					  }else if($movieShowtime->showtime_dtmDate_Time >= "$dateHrNow"){#if time 
+						  if($numKL == 1){
+							$classTime = "timeNow";
+							}else{#end if
+							 $classTime = "timeFuture";
+							}
+						   $numKL++;
+						   $urlPage = "th/selectTicket/$movie->movieID/$movieShowtime->showtime_Session_strID";
+						  $dateBooking = date('Y-m-d H:i', strtotime(" +60 minutes")); 
+							if($dateBooking > $movieShowtime->showtime_dtmDate_Time){ 
+							//	$style45Mins = 'noBooking';
+							}#end if dateBooking
+					  }
+				   ?><div class="rowShowTime  <?php echo $style45Mins; ?> <?php echo $classTime; ?>"> <?php if($movieShowtime->showtime_strName == 'Theatre 1'): ?>
+                      <div class="showTimeHilight"><span title="Hall 1" class="tooltip theater1Icon"></span></div>
+                      <?php endif; ?>
+                      <?php 
+						   $soundAttributes = $movieShowtime->showtime_soundAttributes;
+						   $audio 		= substr($soundAttributes,0,2); 
+						   $subtitle 	= substr($soundAttributes, -2);
+					  ?><a href="<?php echo URL::to("$urlPage"); ?>" title="Audio: <?php echo subLanguage($audio); ?>   / Subtitle: <?php echo subLanguage($subtitle); ?> " class="tooltip"><?php echo date('H:i', strtotime($movieShowtime->showtime_dtmDate_Time)); ?></a> <?php
+                   		$showtimes =  $movieShowtime->showtime_soundAttributes.";";
+						echo	 $showtimes = strstr($showtimes, ';', true); // As of PHP 5.3.0
+				   ?></div>
+                    <?php endif; ?>
+                    <?php endif; ?>
+                    <?php endforeach; ?> </td>
+                </tr>
+              </table>
+            </div>
+            <p class="borderBottom"></p>
+            <?php endif; ?>
+            <?php endforeach; ?></div>
+          <br>
+          <p class="txtBrown20_2 titleDetail "><span style="background-color:#1f2022; padding-right:10px">Synopsis</span></p>
+          <p>&nbsp;</p>
+          <div class="txtWhite20 fontTHLang"><?php echo $movie->movie_Synopsis_TH; ?></div>
+        </div>
+        <p class="clear" style="height:80px"></p>
+      </div>
+    </div>
+  </div>
+ <div class="url">
+     <div id='inline_content' style='padding:30px; background:#fff;text-align:center;'>
+       <p  class="txtBlack20 fontSynopis"><strong>กรุณาทำการจองและรับบัตรชมภาพยนตร์<br>
+ก่อนรอบฉาย 60 นาที</strong></p> 
+       </div>
+   </div>
+  <?php echo $__env->make('frontendTH.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?></div>
+<?php echo $__env->make('frontendTH.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<?php echo HTML::script('js/tooltipster/js/jquery.tooltipster.js'); ?>
+<?php echo HTML::script('js/colorbox-master/jquery.colorbox.js'); ?>
+<script>
+  jQuery(function() { 
+	jQuery('.tooltip').tooltipster();
+	jQuery('.timeAgo a').click(function () {return false;}); 
+	jQuery('.noBooking a').click(function () { 
+		 jQuery.colorbox({width:"30%", inline:true, href:"#inline_content"});
+		return false;
+	});   
+  });
+  </script>
+</body>
+</html>
+<?php endforeach; ?> 

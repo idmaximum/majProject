@@ -1,0 +1,69 @@
+<?php $__env->startSection('content'); ?>
+<?php echo HTML::style('js/colorbox-master/example4/colorbox.css'); ?>
+<ul class="breadcrumbs">
+  <li><a href="cenima">Home &gt;<i class="iconfa-home"></i></a> <span class="separator"></span></li>
+  <li>Report</li>
+</ul>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="70%"><h1 class="pagetitle">Report</h1></td>
+    <td width="30%" class="text-center"><form class="form-inline" role="form">
+        <div class="form-group">
+          <label class="sr-only" for="exampleInputEmail2">Keyword</label>
+          <input type="email" class="form-control" id="exampleInputEmail2" placeholder="Keyword">
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+      </form></td>
+  </tr>
+</table>
+<p class="line-brown"></p>
+<div class="detail-page">
+  <form action="" method="post">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+     
+      <tr>
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0"  class="table table-striped">
+            <thead>
+              <tr align="center">
+                <td width="12%"><strong>Name-Surname</strong></td>
+                <td width="12%"><strong>Email</strong></td>
+                <td width="12%"><strong>Tel</strong></td>
+                <td width="12%"><strong>Movie Name</strong></td>
+                <td width="12%"><strong>รอบหนัง</strong></td>
+                <td width="12%"><strong>Channel</strong></td>
+                <td width="12%"><strong>Payment Type</strong></td>
+                <td width="12%"><strong>info</strong></td>
+              </tr>
+            </thead>
+            <tbody> 
+            <?php foreach($resultDataLogBooking as $rowDataLogBooking): ?>
+            <tr align="center">
+              <td><?php echo $rowDataLogBooking->cname; ?></td>
+              <td><?php echo $rowDataLogBooking->email; ?></td>
+              <td><?php echo $rowDataLogBooking->phone; ?></td>
+              <td><?php echo $rowDataLogBooking->movie; ?></td>
+              <td><?php echo $rowDataLogBooking->show_time; ?></td>
+              <td><?php echo $rowDataLogBooking->channel; ?></td>
+              <td><?php echo $rowDataLogBooking->order_payment; ?>&nbsp;</td>
+              <td><a href="reportView/<?php echo $rowDataLogBooking->log_id; ?>" class="iframe">View</a></td>
+            </tr>
+            <?php endforeach; ?>
+              </tbody>
+            
+          </table></td>
+      </tr>
+      <tr>
+        <td> </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<p class="line-brown clear"></p>
+<?php echo HTML::script('js/colorbox-master/jquery.colorbox.js'); ?> 
+<script type="text/javascript">
+	jQuery(document).ready(function(){ 
+		jQuery(".iframe").colorbox({iframe:true, width:780, height:560});  
+	}); 
+</script> 
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout.master', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

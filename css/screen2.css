@@ -1,0 +1,39 @@
+@charset utf-8;
+#main{background-image:none}
+.showToday{margin-top:0}
+#ui-datepicker-div{font-size:14px;font-family:mongolian_baitiregular,Sans-Serif;margin:auto}
+#datepicker{
+	background-image: url(../images/ic-calendar.png);
+	background-repeat: no-repeat;
+	height: 40px;
+	width: 232px;
+	border: 1px solid #565656;
+	background-position: right top;
+	outline: none;
+	color: #c1ad7f!important;
+	padding-left: 10px;
+	font-family: mongolian_baitiregular,Sans-Serif;
+	font-size: 22px;
+	margin: auto;
+	background-color: #000000;
+	cursor:pointer;
+}
+.selectDate{margin-bottom:30px}
+.menuContent{background-color:#000;border-top-width:1px;border-bottom-width:1px;border-top-style:solid;border-bottom-style:solid;border-top-color:#4d4d4d;border-bottom-color:#4d4d4d;margin-bottom:15px}
+.titleMovie{padding-bottom:24px;border-bottom-width:1px;border-bottom-style:solid;border-bottom-color:#7f6e47;margin-bottom:30px}
+.content-movie-left{float:left;width:252px;padding-right:40px}.content-movie-right{float:left;width:732px}.titleMovie .content-movie-right .txtGold36{float:left}.detailMovie .content-movie-left img{background-image:url(../images/movie_detail_default.png);padding:7px}
+.detailMovie .content-movie-left img.rate{padding:6px 0 0!important}
+.titleDetail{display:block;background-image:url(../images/6_movie_detail_28.png);background-repeat:repeat-x;background-position:100px center}
+#contentComingsoon{background-image:url(../images/line-comingsoon.png);background-repeat:repeat-y;background-position:2px top}
+.rowMonth{background-image:url(../images/bullet-commingsoon.png);background-repeat:no-repeat;background-position:2px 0;padding:0 10px 50px 50px}
+.titleMonth{background-image:url(../images/line_comingsoon.png);background-repeat:no-repeat;background-position:150px center;margin-bottom:25px}
+.rowMonth .rowMovie{width:480px;padding-right:0;padding-bottom:20px;float:left}
+.icCal,.icTrail{background-repeat:no-repeat;display:block;margin-top:10px;padding:6px 0 5px}
+.icTrail{background-image:url(../images/5_comingsoon_16.png);padding:6px 0 12px 30px}
+.detailMovieComingsoon{float:left;width:320px;margin-left:5px}
+.noUpdateShowtime{text-align:center;color:#f1e3c2;font-size:18px;padding:120px 10px 10px}
+.pagination{text-align:center}
+.pagination li{display:inline}
+.pagination li a,.pagination li.active span{display:inline-block;color:#5b5b5b;text-decoration:none;font-size:18px;background-image:url(../images/bullet-page.png);background-repeat:no-repeat;background-position:center center;padding:16px 18px 15px}
+.pagination li.active span,.pagination li a:hover{background-image:url(../images/bullet-page-hover.png);color:#fff}
+.pagination li.disabled{display:none}

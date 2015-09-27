@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta name="description" content="Embassy Diploment Screens" />
+<meta name="keywords" content="embassy, diplomat, ais, central, ดูหนัง, หนังใหม่, โรงหนัง, โรงภาพยนตร์"/>
+<meta property="og:image" content="http://www.embassycineplex.com/images/share.jpg" />
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?> 
+<?php echo HTML::style('css/screenInside.css'); ?>
+<?php echo HTML::style('css/infomation.css'); ?>
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo $__env->make('frontend.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</head>
+<body>
+<div id="main">
+  <?php echo $__env->make('frontend.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>   
+   	 <div id="content" class="content-main" style="padding:120px 0 0 0"> 
+ 		<p class="txtBrown18_2 fontSynopis" style="text-align:center; font-size:24px">There is a connection problem please click previous </p>
+ 		<p class="txtBrown18_2 fontSynopis" style="text-align:center; font-size:24px">or call Box Office Hotline at 0-2160-5999 </p>
+<p class="clear" style="height:140px"></p>
+  <?php echo $__env->make('frontend.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div> 
+<?php echo $__env->make('frontend.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</body>
+</html>

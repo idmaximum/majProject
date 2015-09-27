@@ -1,0 +1,6 @@
+@charset utf-8;
+.rowSystemMovie{background-image:url(../images/bg_movie_detail.jpg);background-repeat:repeat-x;background-position:left bottom;background-color:#131315;padding:40px 20px 20px}
+.borderBottom{background-color:0;height:1px}
+.contentShowtimeMovie{border:1px solid #3e3e3e}
+#content{padding-top:24px}
+.rowShowTodayShowtime,.rowShowTodayShowtime1{padding-top:20px;float:right}

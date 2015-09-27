@@ -52,17 +52,39 @@ return array(
 			'prefix'   => '',
 		),
 
-		'mysql' => array(
+		/*'mysql' => array(
 			'driver'    => 'mysql',
-			'host'      => 'localhost',
-			'database'  => 'major',
-			'username'  => 'root',
-			'password'  => '12345',
+			'host'      => '10.100.101.236',
+			'database'  => 'www_embassycineplex_com',
+			'username'  => 'embassy',
+			'password'  => 'embassy@2014',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
 		),
-
+*/
+		'mysql' => array(
+			'driver'    => 'mysql',
+			'host'      => '10.121.128.10',
+			'database'  => 'www_embassycineplex_com',
+			'username'  => 'embassy',
+			'password'  => 'embassy@2014',
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+		),
+		
+		/*	'mysql' => array(
+			'driver'    => 'mysql',
+			'host'      => 'localhost',
+			'database'  => 'embassy',
+			'username'  => 'root',
+			'password'  => '',
+			'charset'   => 'utf8',
+			'collation' => 'utf8_unicode_ci',
+			'prefix'    => '',
+		),
+*/
 		'pgsql' => array(
 			'driver'   => 'pgsql',
 			'host'     => 'localhost',

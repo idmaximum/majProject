@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>&laquo;TimeTo&raquo; jQuery plug-in example</title>
+ 
+	<link href="js/timeTo/timeTo.css" type="text/css" rel="stylesheet"/>
+
+   
+</head>
+<body>
+  
+xxxxxxxxxxxxxxxx
+    <div id="countdown-1"></div>
+ 
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
+    <script src="js/timeTo/jquery.timeTo.min.js"></script>
+    <script>
+        /**
+         * Set timer countdown in seconds with callback
+         */
+        $('#countdown-1').timeTo({
+            seconds: 5,
+            displayHours: false
+		  }, function(){
+			 // alert('Countdown finished');
+			 var data = 1;
+			    jQuery.ajax({
+					   type: "GET",
+					   url: "http://localhost/embassy_V2",
+					   data: data,
+					   cache: false,
+					success: function(data){ 
+					 alert('Your session has expired Please try again');
+					 window.location = 'http://localhost/embassy_V2/demoTimeOutx.html'; 
+					}
+				  });	
+
+		  });
+ 
+    </script>
+</body>
+</html>

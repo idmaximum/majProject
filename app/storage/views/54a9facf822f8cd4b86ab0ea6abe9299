@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta property="og:image" content="http://www.invp.co.th/media_file/images/share.jpg" />
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?> 
+<?php echo HTML::style('css/screenInside.css'); ?> 
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo $__env->make('frontend.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</head>
+<body>
+<div id="main">
+  <?php echo $__env->make('frontend.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+  <div id="content" class="content-main"> 
+    <h1 class="showToday">PROMOTION</h1>
+    <div class="contentPage" id="pagePromotion"> 
+    <?php  $numRow = 1; ?>
+    	 <?php foreach($rowPromotion as $row): ?>
+         <?php
+      	 $promotionName  = $row->promotion_title_en;
+		 $nameMovieSub =  str_replace_text($promotionName); 
+	  ?>
+           <div class="row-promotion <?php if($numRow%3 == 0){?>last<?php }?>">
+            <p class="timeShow"><?php echo $row->promotion_datetime; ?></p>
+            <p style="height:200px; overflow:hidden; text-align:center"><a href="<?php echo URL::to('promotion/'.$row->promotion_ID.'/'.$nameMovieSub); ?>" title="<?php echo $promotionName; ?>"><img src="<?php echo asset('uploads/promotion/'.$row->promotion_imageThumb); ?>" width="300" class="hoverImg08" alt="<?php echo $promotionName; ?>" ></a></p>
+            <h2 class="txtWhite20"><a href="<?php echo URL::to('promotion/'.$row->promotion_ID.'/'.$nameMovieSub); ?>"><?php echo $row->promotion_title_en; ?></a></h2>
+            <p class="txtBrown18_2"><?php echo $row->promotion_abstract_en; ?></p>
+          </div>
+          
+         <?php if($numRow%3 == 0){?><p class="clear"></p><?php }?>
+          <?php $numRow++?>
+         <?php endforeach; ?>
+        <p class="clear"></p>  
+        <?php echo $rowPromotion->links();  ?>
+        <br><br> 
+    </div>
+  </div> 
+  <?php echo $__env->make('frontend.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div> 
+<?php echo $__env->make('frontend.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</body>
+</html>

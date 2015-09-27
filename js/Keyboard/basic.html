@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+
+	<title>Virtual Keyboard Basic Demo</title>
+
+	<!-- demo -->
+ 
+
+	<!-- jQuery & jQuery UI + theme (required) -->
+	<link href="http://code.jquery.com/ui/1.9.0/themes/ui-darkness/jquery-ui.css" rel="stylesheet">
+	<script src="https://www.embassycineplex.com/js/jquery-2.0.2.min.js"></script> 
+	<script src="http://code.jquery.com/ui/1.9.0/jquery-ui.min.js"></script>
+
+	<!-- keyboard widget css & script (required) -->
+	<link href="css/keyboard.css" rel="stylesheet">
+	<script src="js/jquery.keyboard.js"></script>
+
+ 
+	<script>
+		$(function(){
+			$('.keyboard').keyboard();
+			
+			$('#hex').keyboard({
+		layout: 'custom',
+		customLayout: {
+			'default' : [
+				'9 8 7',
+				'6 5 4',
+				'3 2 1 ',				 
+				'0 {a} {c}'
+			]
+		},
+		maxLength : 10,
+		restrictInput : true, // Prevent keys not in the displayed keyboard from being typed in
+		useCombos : false // don't want A+E to become a ligature
+	});
+	
+		$('#ipad-email').keyboard({
+
+		display: {
+			'bksp'    : '\u2190',
+			'enter'   : 'return',
+			'default' : 'ABC',
+			'meta1'   : '.?123',
+			'meta2'   : '#+=',
+			'accept'  : '\u21d3'
+		},
+
+		layout: 'custom',
+
+		customLayout: {
+
+			'default': [
+				'q w e r t y u i o p {bksp}',
+				'a s d f g h j k l {enter}',
+				'{s} z x c v b n m @ . {s}',
+				'{meta1} {space} _ - {accept}'
+			],
+			'shift': [
+				'Q W E R T Y U I O P {bksp}',
+				'A S D F G H J K L {enter}',
+				'{s} Z X C V B N M @ . {s}',
+				'{meta1} {space} _ - {accept}'
+			],
+			'meta1': [
+				'1 2 3 4 5 6 7 8 9 0 {bksp}',
+				'` | { } % ^ * / \' {enter}',
+				'{meta2} $ & ~ # = + . {meta2}',
+				'{default} {space} ! ? {accept}'
+			],
+			'meta2': [
+				'[ ] { } \u2039 \u203a ^ * " , {bksp}',
+				'\\ | / < > $ \u00a3 \u00a5 \u2022 {enter}',
+				'{meta1} \u20ac & ~ # = + . {meta1}',
+				'{default} {space} ! ? {accept}'
+			]
+
+		}
+
+	});
+	
+	
+		});
+	</script>
+
+</head>
+
+<body>
+
+	<!-- Links to other demo pages & docs -->
+ 
+	<!-- End Links -->
+
+	<div id="wrap"> <!-- wrapper only needed to center the input -->
+
+		<!-- keyboard input -->
+ 
+<br>
+<br>Name<br>
+
+<input class="keyboard" type="text"><br>
+<br>
+<br>Tel<br>
+<input id="hex" type="text"><br>
+<br>
+<br>Email<br>
+<input name="" type="text" id="ipad-email">
+
+	</div> <!-- End wrapper -->
+
+</body>
+
+</html>

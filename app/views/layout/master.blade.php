@@ -1,4 +1,9 @@
-<!doctype html>
+<?php 
+	if(Session::get('_EMAIL') == "" || Session::get('_GRPID') == "" || Session::get('_ID') == "" ){ 
+		header("Location: login");
+		exit();
+	}/**/
+?><!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -23,6 +28,26 @@
   </div>
   <p class="clear"></p>  
 </div>
+<script type="text/javascript">
+	jQuery('#syncFileServer').click(function (e) {
+			jQuery.ajax({
+				url : '{{URL::to("backoffice_management/syncServer#syncContent")}}', 
+					type:"GET", cache: false, 	  	
+					success :function(data){
+						alert('Sync File Complate'); 
+				 }
+			});    
+	  });  
+	  jQuery('#syncUpdateShowtime').click(function (e) {
+			jQuery.ajax({
+				url : 'http://www.embassycineplex.com/service_get_data/getDataMovie.php', 
+					type:"GET", cache: false, 	  	
+					success :function(data){
+						alert('Update Showtime Complate'); 
+				 }
+			});    
+	  });  
+</script>
 
 </body>
 </html>

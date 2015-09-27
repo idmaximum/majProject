@@ -1,0 +1,42 @@
+.hide { position: absolute; top: -9999px; left: -9999px; }
+/* Specific to example two */
+#showtimeTab .list-wrap {}
+#showtimeTab ul { list-style: none; }
+#showtimeTab ul li   {} 
+#showtimeTab ul li:last-child a { border: none;  }
+
+#showtimeTab .nav { overflow: hidden;}
+#showtimeTab .nav li { width: 146px; float: left; margin: 0; }
+#showtimeTab .nav li.last { margin-right: 0; width: 148px;  }
+#showtimeTab .nav li:last-child { width: 148px;}
+#showtimeTab .nav li a {
+	display: block;
+	padding: 13px 5px 5px 5px;
+	background: #000000;
+	color: #8e8e8e;
+	font-size: 14px;
+	text-align: center;
+	border: 0;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+#showtimeTab li a.current,#showtimeTab li a.current:hover {	 
+	color: #ffecbc!important;
+	background-image: url(../../../images/tabHilight.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-image: url(../../../images/tabHilight.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	
+	
+}
+ #showtimeTab li a.current .txtBrown36{	
+ color: #ffecbc!important;
+ }
+#showtimeTab .nav li a:hover, #showtimeTab .nav li a:focus { 
+	background-image: url(../../../images/tabHilight.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	
+}

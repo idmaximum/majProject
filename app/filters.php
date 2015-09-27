@@ -10,13 +10,17 @@
 | application. Here you may also register your custom route filters.
 |
 */
+ 
 
 App::before(function($request)
 {
-	//
+   /* if( ! Request::secure())
+    {
+        return Redirect::secure(Request::getRequestUri());
+    }*/
+ 
 });
-
-
+ 
 App::after(function($request, $response)
 {
 	//
@@ -35,7 +39,9 @@ App::after(function($request, $response)
 
 Route::filter('auth', function()
 {
-	if (Auth::guest()) return Redirect::guest('login');
+	if (Auth::guest()){
+		return Redirect::guest('backoffice_management/login');
+	}
 });
 
 

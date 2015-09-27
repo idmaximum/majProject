@@ -1,0 +1,44 @@
+<?php  $filename = Request::path();
+		$subUrl = substr("$filename",3);?>
+        <div style="width:100%; text-align:center; background: rgba(0,0,0,0.2); border-bottom:solid 1px #414242">
+<div style="width:1024px; margin:auto; font-size:16px; " class="txtBrown18_2">
+<table width="1024" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr>
+      <td width="95" height="60" align="left" valign="middle">Follow us on</td>
+      <td height="60" align="left" valign="middle">
+      <a href="https://www.facebook.com/embassycineplex" target="_blank"><img src="{{asset('images/icon_top_fb.png')}}" class="hoverImg08"></a>&nbsp;
+      <a href="https://www.twitter.com/embassycineplex" target="_blank"><img src="{{asset('images/icon_top_tw.png')}}" class="hoverImg08"></a>&nbsp;
+      <a href="http://instagram.com/embassyscreens" target="_blank"><img src="{{asset('images/icon_top_ig.png')}}" class="hoverImg08"></a>&nbsp;
+      <a href="http://www.youtube.com/user/embassycineplex" target="_blank"><img src="{{asset('images/icon_top_yt.png')}}" class="hoverImg08"></a></td>
+      <td height="60" align="right" valign="middle">Get our app Embassy Screens on</td>
+      <td width="245" height="60" align="right" valign="middle"><a href="https://itunes.apple.com/th/app/embassy-screens/id882209348?mt=8" target="_blank"><img src="{{asset('images/download_appstore.png')}}" class="hoverImg08"></a>&nbsp;&nbsp;<a href="https://play.google.com/store/apps/details?id=th.co.invp.EmbassyActivity&hl=en" target="_blank"><img src="{{asset('images/download_googleplay.png')}}" class="hoverImg08"></a></td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<div id="header" >
+  <div id="divlogo" class="content-main"> <a href="{{URL::to('th/')}}"><img src="{{asset('images/logo.png')}}" width="171" height="124" alt="Embassy" class="hoverImgLogo"></a> </div>
+  <div class="menuTop">
+    <div class="content-main">
+      <ul>
+        <li <?php echo ($filename  == "th")? "class=\"select\"" : "";?>><a href="{{URL::to('th/')}}">Today</a></li>
+        <li <?php echo ($filename =="th/advancebooking")? "class=\"select\"" : "";?>><a href="{{URL::to('th/advancebooking')}}">Advance Booking</a></li>
+        <li <?php echo ($filename =="th/comingsoon")? "class=\"select\"" : "";?>><a href="{{URL::to('th/comingsoon')}}">Coming soon</a></li>
+        <li <?php echo ($filename =="th/information")? "class=\"select\"" : "";?>><a href="{{URL::to('th/information')}} ">information</a></li>
+        <?php   /* <li <?php echo ($filename =="contactus")? "class=\"select\"" : "";?>><a href="{{URL::to('contactus')}} ">CONTACT US</a></li> */ ?>
+        <li <?php echo ($filename =="th/promotion" || $filename =="th/promotionDetail")? "class=\"select\"" : "";?>><a href="{{URL::to('th/promotion')}}">promotion</a></li>
+        <li <?php echo ($filename =="th/event_activity" || $filename =="th/event_activityDetail.php")? "class=\"select\"" : "";?>><a href="{{URL::to('th/event_activity')}}">Event &amp; Activity</a></li>
+      </ul>
+      <div class="wrapper-demo">
+        <div id="dd" class="wrapper-dropdown-2" tabindex="1">TH
+          <ul class="dropdown">
+             <?php if($filename !="th/selectSeats"){?> <li><a href="{{URL::to("$subUrl")}}">EN</a></li><?php }?>
+        	 <?php   /*<li><a href="#">CN</a></li>*/?>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

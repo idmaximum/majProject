@@ -1,0 +1,36 @@
+<!--[if lt IE 8]>
+   <?php echo HTML::script('js/jquery-1.8.js'); ?>
+<![endif]-->
+<!--[if lt IE 9]>
+    <?php echo HTML::script('js/jquery-1.9.1.min.js'); ?>
+<![endif]--> 
+<?php echo HTML::script('js/jquery-2.0.2.min.js'); ?>
+<script type="text/javascript">	
+	function DropDown(el) {
+		this.dd = el;
+		this.initEvents();
+	}
+	DropDown.prototype = {
+		initEvents : function() {
+			var obj = this;
+
+			obj.dd.on('click', function(event){
+				jQuery(this).toggleClass('active');
+				event.stopPropagation();
+			});	
+		}
+	} 
+	jQuery(function() {
+		jQuery( "#buttonLanding" ).click(function() { 			 
+			  jQuery("#mainTopLanding").fadeOut(500);
+		}); 
+	  jQuery( "#divLandingPage" ).delay( 5000 ).fadeOut( 500 );
+			
+		var dd = new DropDown( jQuery('#dd') );
+
+		jQuery(document).click(function() {
+			// all dropdowns
+			jQuery('.wrapper-dropdown-2').removeClass('active');
+		});
+	}); 
+</script>

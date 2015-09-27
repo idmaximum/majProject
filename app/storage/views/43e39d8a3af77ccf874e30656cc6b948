@@ -1,0 +1,81 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Embassy Diplomat Screens by AIS</title>
+<meta property="og:image" content="http://www.embassycineplex.com/images/share.jpg" />
+<?php echo HTML::style('css/reset.css'); ?>
+<?php echo HTML::style('css/font.css'); ?>
+<?php echo HTML::style('css/screen.css'); ?>
+<?php echo HTML::style('css/screen2.css'); ?>
+<?php echo HTML::style('js/bxslider/jquery.bxslider.css'); ?>
+<?php echo HTML::style('js/DropDown/css/style.css'); ?>
+<?php echo $__env->make('frontend.incScriptTop', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+<style type="text/css">
+.rowMonth .rowMovie .rowShowTodayImage {
+	padding: 6px 8px 5px 8px;background-image: url(images/1_homepage_11_ss.png);position:relative;
+}
+.booknow {
+	position: absolute;	width: 99px;height: 94px;z-index: 1;left: 8px;top: 6px;background-image:url(images/btn_buynow.png);	background-repeat: no-repeat;	background-position: left top;
+}
+</style> 
+</head>
+<body>
+<div id="main">
+  <?php echo $__env->make('frontend.incHeader', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>  
+  <div id="content" class="content-main"> 
+    <h1 class="showToday">COMING SOON</h1>
+    <div class="contentPage" id="contentComingsoon"> 
+        <?php 
+			$numMovie = '';
+			$yearNow =  date('Y');
+			$monthNow =  date('m');
+	
+		for($monthNum = 0; $monthNum < 6 ;$monthNum++){?>
+        	<?php     $mounthComingsoon = date('F Y', strtotime(" +$monthNum month $yearNow-$monthNow-01"));
+				      $getStart = date('Y-m-01', strtotime(" +$monthNum month"));
+				 	  $getEnd = date('Y-m-31', strtotime(" +$monthNum month")); 
+					  
+					  $numMovie = countMovieComingsoon($getStart, $getEnd ); 
+				 if($numMovie != '0'){
+			?> 
+       <div class="rowMonth ">
+        <p class="txtWhite25 titleMonth"><?php echo $mounthComingsoon; ?></p>
+         <?php foreach($rowComingsoon as $movieComingsoon): ?>
+           <?php if($mounthComingsoon === date('F Y', strtotime($movieComingsoon->movie_ReleaseDate)) ): ?> 
+       	 <div class="rowMovie">
+         <?php  
+		 	$nameMovie  = $movieComingsoon->movie_Name_EN;
+		 	$nameMovieSub =  str_replace_text($nameMovie); 
+		 ?>
+       	  <div class="rowShowTodayImage"><a href="<?php echo URL::to("comingsoon/$movieComingsoon->movieID/$nameMovieSub"); ?>" title="<?php echo $nameMovie; ?>" ><img src="<?php echo asset("uploads/movie/$movieComingsoon->movie_Img_Thumb"); ?>" width="117" height="177" class="hoverImg08"  alt="<?php echo $nameMovie; ?>"></a></div>
+       	  
+         <div class="detailMovieComingsoon">
+            <h2 class="txtGold24"><?php echo $nameMovie; ?></h2>
+            <p class="txtBrown20_2 icCal"><?php echo date('d F Y', strtotime($movieComingsoon->movie_ReleaseDate)); ?></p>
+          <?php if($movieComingsoon->movie_Youtube != ""){ ?>
+            <p class="txtBrown20_2 icTrail"><a href="<?php echo URL::to("comingsoon/$movieComingsoon->movieID/$nameMovieSub"); ?>" title="Trailer <?php echo $nameMovie; ?>">Trailer</a></p>
+            <?php }#end if?>
+            <?php 
+				$countShowtimeComingsoon = '';
+				$countShowtimeComingsoon =  countShowtimeComingsoon($movieComingsoon->movie_strID);
+				if($countShowtimeComingsoon != ''){
+			?>
+            <p><a href="<?php echo URL::to("comingsoonbooking/$movieComingsoon->movieID/$nameMovieSub"); ?>"><img src="<?php echo asset("images/btn-comingsoon-booknow.png"); ?>" width="120" height="42" class="hoverImg08"  alt="Booking Now"></a></p>
+            <?php }?>
+          </div>
+          <p class="clear"></p>
+        </div>
+      	   <?php endif; ?>
+         <?php endforeach; ?> 
+		<p class="clear"></p>
+      </div>
+      	 <?php }#end if?>  
+        <?php }#end for?>  
+    </div>
+  </div> 
+  <?php echo $__env->make('frontend.incFooter', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+</div> 
+<?php echo $__env->make('frontend.incScriptBottom', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?> 
+</body>
+</html>
