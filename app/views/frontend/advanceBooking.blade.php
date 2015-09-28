@@ -15,7 +15,7 @@
 <link media="all" type="text/css" rel="stylesheet" href="{{$config_path}}/js/jqueryUI/css/custom-theme/jquery-ui-1.10.4.custom.css">
 <link media="all" type="text/css" rel="stylesheet" href="{{$config_path}}/js/OrganicTabs/css/style.css">
 <link media="all" type="text/css" rel="stylesheet" href="{{$config_path}}/js/tooltipster/css/tooltipster.css">
-<link media="all" type="text/css" rel="stylesheet" href="{{$config_path}}/js/colorbox-master/example3/colorbox.css"> 
+<link media="all" type="text/css" rel="stylesheet" href="{{$config_path}}/js/colorbox-master/example3/colorbox.css">
 @include('frontend.incScriptTop')
 </head>
 <body>
